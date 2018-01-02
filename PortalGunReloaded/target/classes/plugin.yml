@@ -1,0 +1,19 @@
+name: PortalGunReloaded
+main: com.murabi10.portalgunreloaded.PortalGun
+version: 1.1
+softdepend: [Multiverse-Core, Multiverse-Portals]
+commands:
+   debug:
+      description: debug menu.
+      usage: /<command>
+      permission: portal.debug
+      permission-message: You don't have <permission>
+   editor:
+      description: start edit
+      usage: /<command>
+   select:
+      description: select chamber for play
+      usage: /<command> <chamberName>
+   retire:
+      description: retire current chamber
+      usage: /<command>

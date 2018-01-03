@@ -1,44 +1,49 @@
-package com.murabi10.portalgunreloaded.portalevents;
+/*    */ package com.murabi10.portalgunreloaded.portalevents;
+/*    */ 
+/*    */ import com.murabi10.portalgunreloaded.portalgun.PortalColor;
+/*    */ import org.bukkit.entity.Player;
+/*    */ import org.bukkit.event.Event;
+/*    */ import org.bukkit.event.HandlerList;
+/*    */ 
+/*    */ public class PortalLaunchEvent
+/*    */   extends Event
+/*    */ {
+/* 11 */   private static final HandlerList handlers = new HandlerList();
+/*    */   private Player player;
+/*    */   private PortalColor c;
+/*    */   private boolean suc;
+/*    */   
+/*    */   public PortalLaunchEvent(Player launchPlayer, PortalColor color, boolean success)
+/*    */   {
+/* 18 */     this.player = launchPlayer;
+/* 19 */     this.c = color;
+/* 20 */     this.suc = success;
+/*    */   }
+/*    */   
+/*    */   public Player getLaunchPlayer() {
+/* 24 */     return this.player;
+/*    */   }
+/*    */   
+/*    */   public PortalColor getColor() {
+/* 28 */     return this.c;
+/*    */   }
+/*    */   
+/*    */   public boolean isSuccess() {
+/* 32 */     return this.suc;
+/*    */   }
+/*    */   
+/*    */   public HandlerList getHandlers()
+/*    */   {
+/* 37 */     return handlers;
+/*    */   }
+/*    */   
+/*    */   public static HandlerList getHandlerList() {
+/* 41 */     return handlers;
+/*    */   }
+/*    */ }
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-import com.murabi10.portalgunreloaded.portalgun.PortalColor;
-
-public class PortalLaunchEvent extends Event {
-
-    private static final HandlerList handlers = new HandlerList();
-
-    private Player player;
-    private PortalColor c;
-    private boolean suc;
-
-    public PortalLaunchEvent(Player launchPlayer, PortalColor color, boolean success) {
-    	this.player = launchPlayer;
-    	this.c = color;
-    	this.suc = success;
-    }
-
-    public Player getLaunchPlayer() {
-    	return this.player;
-    }
-
-    public PortalColor getColor() {
-    	return this.c;
-    }
-
-    public boolean isSuccess() {
-    	return this.suc;
-    }
-
-	@Override
-	public HandlerList getHandlers() {
-        return handlers;
-    }
-
-	public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-}
+/* Location:              C:\Users\2SC1815\Desktop\PortalGunReloaded-1.7.2.jar!\com\murabi10\portalgunreloaded\portalevents\PortalLaunchEvent.class
+ * Java compiler version: 7 (51.0)
+ * JD-Core Version:       0.7.1
+ */

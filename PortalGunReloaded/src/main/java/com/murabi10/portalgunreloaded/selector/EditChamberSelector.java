@@ -1,6 +1,6 @@
-package com.murabi10.portalgunreloaded.selector;
+  package com.murabi10.portalgunreloaded.selector;
 
-import java.util.ArrayList;
+  import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.murabi10.portalgunreloaded.PortalGun;
 import com.murabi10.portalgunreloaded.chambereditor.EditorFunction;
 import com.murabi10.portalgunreloaded.chambereditor.TestChamberEditor;
 import com.murabi10.portalgunreloaded.testchamber.DataSystem;
@@ -27,110 +25,110 @@ import com.murabi10.portalgunreloaded.testchamber.GunType;
 import com.murabi10.portalgunreloaded.testchamber.TestChamber;
 import com.murabi10.portalgunreloaded.testchamber.TestChamberData;
 
-public class EditChamberSelector implements CommandExecutor {
+  public class EditChamberSelector implements org.bukkit.command.CommandExecutor
+  {
+    private static ArrayList<Location> locs = new ArrayList<Location>();
 
-	private static ArrayList<Location> locs = new ArrayList<Location>();
+    public static ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
 
-	public static ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
 	private static int tpage = 0;
 	private static final int pageper = (9 * 3) - 4;
 
-	private static final String next = "@NEXT";
-	private static final String search = "@GREP";
-	private static final String ret = "@RETURN";
-	private static final String create = "@NEW";
-	private static final String chamber = "@CHAMBER";
-	private static final String exit = "@exit";
+    private static final String next = "@NEXT";
+    private static final String search = "@GREP";
+    private static final String ret = "@RETURN";
+    private static final String create = "@NEW";
+    private static final String chamber = "@CHAMBER";
+    private static final String exit = "@exit";
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
+      if ((sender instanceof BlockCommandSender))
+      {
+        BlockCommandSender s = (BlockCommandSender)sender;
+        for (Entity ent : s.getBlock().getWorld().getNearbyEntities(s.getBlock().getLocation(), 5.0D, 5.0D, 5.0D)) {
+          if ((ent instanceof Player)) {
+            try {
+              ((Player)ent).closeInventory();
+              OpenGUI((Player)ent, 0, SortType.NAME, "");
+            } catch (Exception e) {
+              e.printStackTrace();
+              sender.sendMessage(ChatColor.RED + "ãªã‚“ã‹ãˆã‚‰ãƒ¼ã§ãŸã‚“ã§ã™ã¾ã‚“ã‘ã©ç®¡ç†äººã«å ±å‘Šã—ã¦ãã ã•ã„ã€‚");
+              ent.sendMessage(ChatColor.RED + "ãªã‚“ã‹ãˆã‚‰ãƒ¼ã§ãŸã‚“ã§ã™ã¾ã‚“ã‘ã©ç®¡ç†äººã«å ±å‘Šã—ã¦ãã ã•ã„ã€‚");
+            }
+          }
+        }
+      }
+      else if ((sender instanceof Player))
+      {
+        try {
+          ((Player)sender).closeInventory();
+          OpenGUI((Player)sender, 0, SortType.NAME, "");
+        } catch (Exception e) {
+          e.printStackTrace();
+          sender.sendMessage(ChatColor.RED + "ãªã‚“ã‹ãˆã‚‰ãƒ¼ã§ãŸã‚“ã§ã™ã¾ã‚“ã‘ã©ç®¡ç†äººã«å ±å‘Šã—ã¦ãã ã•ã„ã€‚");
+        }
+      } else {
+        sender.sendMessage("this command usable only player/commandblock");
+      }
 
-		if (sender instanceof BlockCommandSender) {
+      return true;
+    }
 
-			BlockCommandSender s = (BlockCommandSender) sender;
-			for (Entity ent : s.getBlock().getWorld().getNearbyEntities(s.getBlock().getLocation(), 5, 5, 5)) {
-				if (ent instanceof Player) {
-					try {
-						((Player) ent).closeInventory();
-						EditChamberSelector.OpenGUI((Player) ent, 0, SortType.NAME, "");
-					} catch (Exception e) {
-						e.printStackTrace();
-						sender.sendMessage(ChatColor.RED + "¤Ê¤ó¤«¤¨¤é¡¼¤Ç¤¿¤ó¤Ç¤¹¤Ş¤ó¤±¤É´ÉÍı¿Í¤ËÊó¹ğ¤·¤Æ¤¯¤À¤µ¤¤¡£");
-						ent.sendMessage(ChatColor.RED + "¤Ê¤ó¤«¤¨¤é¡¼¤Ç¤¿¤ó¤Ç¤¹¤Ş¤ó¤±¤É´ÉÍı¿Í¤ËÊó¹ğ¤·¤Æ¤¯¤À¤µ¤¤¡£");
-					}
-				}
-			}
+    public static void remove(Location loc) {
+      locs.remove(loc);
+    }
 
-		} else if (sender instanceof Player) {
+    public static void updateData() {
+      data.clear();
+      for (String name : DataSystem.getChambers()) {
+        data.add(DataSystem.getChamberData(name));
+      }
+      tpage = data.size() / pageper;
+    }
 
-			try {
-				((Player) sender).closeInventory();
-				EditChamberSelector.OpenGUI((Player) sender, 0, SortType.NAME, "");
-			} catch (Exception e) {
-				e.printStackTrace();
-				sender.sendMessage(ChatColor.RED + "¤Ê¤ó¤«¤¨¤é¡¼¤Ç¤¿¤ó¤Ç¤¹¤Ş¤ó¤±¤É´ÉÍı¿Í¤ËÊó¹ğ¤·¤Æ¤¯¤À¤µ¤¤¡£");
-			}
-		} else {
-			sender.sendMessage("this command usable only player/commandblock");
-		}
+    public static void OpenGUI(Player p, int page, SortType type, final String grep) throws Exception
+    {
+      updateData();
+      ArrayList<TestChamberData> refinedData = new ArrayList<TestChamberData>();
 
-		return true;
-	}
+      for (TestChamberData d : data) {
+        if (grep.equals("")) {
+          refinedData.add(d);
+        }
+        else if ((d.getFileName().indexOf(grep) != -1) || (d.getChamberName().indexOf(grep) != -1)) {
+          refinedData.add(d);
+        }
+      }
 
-	public static void remove(Location loc) {
-		locs.remove(loc);
-	}
 
-	public static void updateData() {
-		data.clear();
-		for (String name : DataSystem.getChambers()) {
-			data.add(DataSystem.getChamberData(name));
-		}
-		tpage = ((int) (data.size() / pageper));
-	}
 
-	public static void OpenGUI(Player p, final int page, SortType type, final String grep) throws Exception {
 
-		EditChamberSelector.updateData();
-		ArrayList<TestChamberData> refinedData = new ArrayList<TestChamberData>();
+      String disp = "ãƒã‚§ãƒ³ãƒãƒ¼é¸æŠ";
 
-		for (TestChamberData d : data) {
-			if (grep.equals("")) {
-				refinedData.add(d);
-			} else {
-				if (d.getFileName().indexOf(grep) != -1 || d.getChamberName().indexOf(grep) != -1) {
-					refinedData.add(d);
-				}
-			}
-		}
+      if (refinedData.isEmpty()) {
+        disp = "è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“";
+      } else if (!grep.equals("")) {
+        disp = "\"" + grep + "\"";
+      }
 
-		// p.closeInventory();
+      Inventory UI = Bukkit.getServer().createInventory(null, 27, disp + " (ãƒšãƒ¼ã‚¸" + page + "/" + tpage + ")");
+      if (page > 0) {
+        UI.setItem(0, createItem(Material.ARROW, 1, 0, page - 1 + "ãƒšãƒ¼ã‚¸ã«æˆ»ã‚‹", new String[] { "@RETURN" }));
+      } else {
+        UI.setItem(0, createItem(Material.BARRIER, 1, 0, "ã“ã‚Œä»¥ä¸Šæˆ»ã‚Œã¾ã›ã‚“", new String[0]));
+      }
 
-		String disp = "¥Á¥§¥ó¥Ğ¡¼ÁªÂò";
+      UI.setItem(1, createItem(Material.GLASS, 1, 0, "ãƒã‚§ãƒ³ãƒãƒ¼ã‚’æ¤œç´¢ã™ã‚‹", new String[] { "@GREP" }));
+      UI.setItem(2, createItem(Material.IRON_INGOT, 1, 0, "ãƒã‚§ãƒ³ãƒãƒ¼ã‚’æ–°è¦ä½œæˆã™ã‚‹", new String[] { "@NEW" }));
 
-		if (refinedData.isEmpty()) {
-			disp = "¸«¤Ä¤«¤ê¤Ş¤»¤ó";
-		} else if (!grep.equals("")) {
-			disp = "\"" + grep + "\"";
-		}
+      if (page < tpage) {
+        UI.setItem(26, createItem(Material.ARROW, 1, 0, page + 1 + "ãƒšãƒ¼ã‚¸ã«é€²ã‚€", new String[] { "@NEXT" }));
+      } else {
+        UI.setItem(26, createItem(Material.BARRIER, 1, 0, "ã“ã‚Œä»¥ä¸Šé€²ã‚ã¾ã›ã‚“", new String[0]));
+      }
 
-		Inventory UI = Bukkit.getServer().createInventory(null, 9 * 3, disp + " (¥Ú¡¼¥¸" + page + "/" + tpage + ")");
-		if (page > 0) {
-			UI.setItem(0, createItem(Material.ARROW, 1, 0, page - 1 + "¥Ú¡¼¥¸¤ËÌá¤ë", ret));
-		} else {
-			UI.setItem(0, createItem(Material.BARRIER, 1, 0, "¤³¤ì°Ê¾åÌá¤ì¤Ş¤»¤ó"));
-		}
-
-		UI.setItem(1, createItem(Material.GLASS, 1, 0, "¥Á¥§¥ó¥Ğ¡¼¤ò¸¡º÷¤¹¤ë", search));
-		UI.setItem(2, createItem(Material.IRON_INGOT, 1, 0, "¥Á¥§¥ó¥Ğ¡¼¤ò¿·µ¬ºîÀ®¤¹¤ë", create));
-
-		if (page < tpage) {
-			UI.setItem(26, createItem(Material.ARROW, 1, 0, page + 1 + "¥Ú¡¼¥¸¤Ë¿Ê¤à", next));
-		} else {
-			UI.setItem(26, createItem(Material.BARRIER, 1, 0, "¤³¤ì°Ê¾å¿Ê¤á¤Ş¤»¤ó"));
-		}
-
-		switch (type) {
+      switch (type) {
 		case NAME:
 			Collections.sort(refinedData, new Comparator<TestChamberData>() {
 				public int compare(TestChamberData t1, TestChamberData t2) {
@@ -185,481 +183,490 @@ public class EditChamberSelector implements CommandExecutor {
 			break;
 		}
 
-		for (int i = 0; i < pageper; i++) {
-
-			int index = i + (pageper * page);
-
-			if (!(index < refinedData.size())) {
-				break;
-			}
-
-			TestChamberData d = refinedData.get(index);
-
-			UI.setItem(i + 3, createItem(d));
-
-		}
-
-		p.openInventory(UI);
-
-		final SortType t = type;
-
-		new ItemClickWait(p, new ClickFunction() {
-
-			@Override
-			public boolean click(Player p, ItemStack item) {
-
-				if (item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().hasDisplayName()) {
-
-					if (item.getItemMeta().getLore().contains(next)) {
-						p.closeInventory();
-						try {
-							OpenGUI(p, page + 1, t, grep);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return false;
-					} else if (item.getItemMeta().getLore().contains(ret)) {
-						p.closeInventory();
-						try {
-							OpenGUI(p, page - 1, t, grep);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return false;
-
-					} else if (item.getItemMeta().getLore().contains(search)) {
-
-						p.closeInventory();
-						p.sendMessage("@exit ¤òÆşÎÏ¤¹¤ë¤È¥Õ¥£¥ë¥¿¡¼¤ò¥ê¥»¥Ã¥È¤·¤ÆÌá¤ê¤Ş¤¹");
-						p.sendMessage("¸¡º÷Ê¸»úÎó¤ò¥Á¥ã¥Ã¥ÈÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-						final Player pl = p;
-						try {
-							new StringInputWait(p, new EditorFunction() {
-
-								@Override
-								public boolean reveive(String str) {
-									if (str.equalsIgnoreCase(exit)) {
-
-										try {
-											OpenGUI(pl, page, t, "");
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-									} else {
-										try {
-											OpenGUI(pl, 0, t, str);
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-									}
-									return false;
-								}
-
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						return false;
-					} else if (item.getItemMeta().getLore().contains(create)) {
-
-						final Location loc = reserve();
-
-						if (loc == null) {
-							p.sendMessage("¥¨¥Ç¥£¥¿¡¼¤¬Ëş°÷¤Ç¤¹¡£");
-							try {
-								OpenGUI(p, page, t, grep);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							return false;
-						} else {
-							p.sendMessage("@exit ¤òÆşÎÏ¤¹¤ë¤È¥­¥ã¥ó¥»¥ë¤·¤ÆÌá¤ê¤Ş¤¹");
-							p.sendMessage("¿·µ¬ºîÀ®¤¹¤ë¥Á¥§¥ó¥Ğ¡¼¤Î¥Õ¥¡¥¤¥ëÌ¾¤ò¥Á¥ã¥Ã¥ÈÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-						}
-
-						p.closeInventory();
-
-						final Player pl = p;
-						try {
-							new StringInputWait(p, new EditorFunction() {
-
-								@Override
-								public boolean reveive(String str) {
 
-									if (str.equalsIgnoreCase(exit)) {
-										try {
-											OpenGUI(pl, page, t, "");
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-										return false;
-									} else if (containsMultiByteChar(str)) {
-										pl.sendMessage("¥Á¥§¥ó¥Ğ¡¼¤Î¥Õ¥¡¥¤¥ëÌ¾¤Ë¥Ş¥ë¥Á¥Ğ¥¤¥ÈÊ¸»ú¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó");
-										pl.sendMessage("±Ñ¿ô»ú¤Ê¤É¤ò»È¤Ã¤Æ¤¯¤À¤µ¤¤ >");
 
-										return true;
-									} else if (str.indexOf("@") != -1) {
-										pl.sendMessage("¥Á¥§¥ó¥Ğ¡¼Ì¾¤Ë@¤Ï»È¤¨¤Ş¤»¤ó");
-										pl.sendMessage("¤Û¤«¤Î¥Õ¥¡¥¤¥ëÌ¾¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-										return true;
-									} else if (DataSystem.isCompleteExist(str)) {
-										pl.sendMessage(str + " ¤Ï´û¤ËÂ¸ºß¤¹¤ë¥Á¥§¥ó¥Ğ¡¼¥Õ¥¡¥¤¥ë¤Ç¤¹¡£");
-										pl.sendMessage("¤Û¤«¤Î¥Õ¥¡¥¤¥ëÌ¾¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-										return true;
-									} else {
-
-										try {
-
-											pl.sendMessage("¤·¤Ğ¤é¤¯¤ªÂÔ¤Á¤¯¤À¤µ¤¤");
-
-											if (TestChamberEditor.getEditor(pl) != null) {
-												pl.sendMessage(ChatColor.RED + "¥¨¥é¡¼¡§¤³¤Î¥¨¥é¡¼¤Ïµ¯¤³¤Ã¤Æ¤Ï¤¤¤±¤Ê¤¤¤Î¤Ç´ÉÍı¿Í¤ËÊó¹ğ¤·¤Æ¤¯¤À¤µ¤¤¡£");
-												System.out.println("ERROR! " + pl.getName());
-											}
-
-											TestChamber tc = new TestChamber();
-											TestChamberData td = new TestChamberData(pl.getUniqueId(), str,
-													Calendar.getInstance());
-											//td.setDesignerName(pl.getDisplayName().split(" ")[0]);
-											td.setDesignerName(pl.getName());
-
-											try {
-
-												DataSystem.Save(tc, td, str);
-
-												OpenChamberEditMenu(pl, str, page, t, grep);
-
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
-
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-
-										return false;
-									}
-								}
-
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						return false;
-					} else if (item.getItemMeta().getLore().contains(chamber)) {
-
-						final String chamberFileName = item.getItemMeta().getDisplayName();
-
-						OpenChamberEditMenu(p, chamberFileName, page, t, grep);
-
-						return false;
-
-					} else {
-						return true;
-					}
-
-				} else {
-					return true;
-				}
-
-			}
-
-		});/**/
-
-	}
-
-	private static final String editChamber = "@EDIT";
-	private static final String renameChamber = "@RENAME";
-	private static final String deleteChamber = "@DELETE";
-	private static final String returnMenu = "@RETURNMENU";
-	private static final String publish = "@PUBLISH";
-	private static final String gunTypeChange = "@GUNTYPE";
-	private static final String setName = "@SETNAME";
-
-	private static void OpenChamberEditMenu(Player p, final String fileName, final int page, final SortType type,
-			final String grep) {
-		p.closeInventory();
-
-		Inventory UI = Bukkit.getServer().createInventory(null, 9, fileName);
-
-		final TestChamberData d = DataSystem.getChamberData(fileName);
-
-		UI.setItem(0, createItem(d));
-		UI.setItem(1, createItem(Material.EMPTY_MAP, 1, 0, "¥¿¥¤¥È¥ë¥»¥Ã¥È", setName));
-		UI.setItem(2, createItem(Material.MAP, 1, 0, "¥Á¥§¥ó¥Ğ¡¼ÊÔ½¸", editChamber));
-		UI.setItem(3, createItem(Material.EMPTY_MAP, 1, 0, "¥Á¥§¥ó¥Ğ¡¼Ì¾ÊÑ¹¹", renameChamber));
-		UI.setItem(4, createItem(Material.BARRIER, 1, 0, "¥Á¥§¥ó¥Ğ¡¼ºï½ü", deleteChamber));
-		UI.setItem(5, createItem(Material.PAPER, 1, 0, d.isPublished() ? "Èó¸ø³«¤Ë¤¹¤ë" : "¸ø³«¤¹¤ë", publish));
-
-		String label = "»Ùµë¥¿¥¤¥×ÊÑ¹¹:";
-		String lore = "¸½ºß¤Î¥¿¥¤¥×:";
-
-		switch (d.getPortalGunGive()) {
-		case DUAL_PORTAL_DEVICE:
-			label += "¥·¥ó¥°¥ë";
-			lore += "¥Ç¥å¥¢¥ë";
-			break;
-		case SINGLE_PORTAL_DEVICE:
-			label += "»Ùµë¤Ê¤·";
-			lore += "¥·¥ó¥°¥ë";
-			break;
-		case NONE:
-			label += "¥Ç¥å¥¢¥ë";
-			lore += "»Ùµë¤Ê¤·";
-			break;
-		default:
-			label += "ERROR";
-			lore += "ERROR";
-			break;
-
-		}
-
-		UI.setItem(6, createItem(Material.WOOD_SWORD, 1, 0, label, lore, gunTypeChange));
-
-		UI.setItem(8, createItem(Material.ARROW, 1, 0, "Ìá¤ë", returnMenu));
-
-		p.openInventory(UI);
-		try {
-			new ItemClickWait(p, new ClickFunction() {
-
-				@Override
-				public boolean click(final Player p, ItemStack item) {
-
-					// System.out.println(item.getItemMeta().getLore().get(0));
-
-					if (item.getItemMeta().getLore().contains(editChamber)) {
-
-						p.sendMessage("¤·¤Ğ¤é¤¯¤ªÂÔ¤Á¤¯¤À¤µ¤¤");
-						p.closeInventory();
-
-						Location loc = reserve();
-
-						if (loc == null) {
-							p.sendMessage("¥¨¥Ç¥£¥¿¡¼¤¬Ëş°÷¤Ç¤¹¡£");
-							OpenChamberEditMenu(p, fileName, page, type, grep);
-							return false;
-						}
-
-						if (TestChamberEditor.getEditor(p) != null) {
-							p.sendMessage(ChatColor.RED + "¥¨¥é¡¼¡§¤³¤Î¥¨¥é¡¼¤Ïµ¯¤³¤Ã¤Æ¤Ï¤¤¤±¤Ê¤¤¤Î¤Ç´ÉÍı¿Í¤ËÊó¹ğ¤·¤Æ¤¯¤À¤µ¤¤¡£");
-							System.out.println("ERROR! " + p.getName());
-							return false;
-						}
-
-						TestChamber tc = DataSystem.getChamberObject(fileName);
-						TestChamberData td = d;
-
-						try {
-							TestChamberEditor edit = new TestChamberEditor(loc, tc, td, p);
-
-							locs.add(loc);
-
-							edit.setVisible(true);
-
-							edit.StartEdit();
-
-							return false;
-
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						return false;
-
-					} else if (item.getItemMeta().getLore().contains(setName)) {
-
-						p.closeInventory();
-						p.sendMessage("@exit ¤òÆşÎÏ¤¹¤ë¤È¥­¥ã¥ó¥»¥ë¤·¤ÆÌá¤ê¤Ş¤¹");
-						p.sendMessage("¥¿¥¤¥È¥ë¤ò¥Á¥ã¥Ã¥ÈÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-						try {
-							new StringInputWait(p, new EditorFunction() {
-
-								@Override
-								public boolean reveive(String str) {
-
-									d.setChamberName(str);
-									DataSystem.Save(d, fileName);
-
-									OpenChamberEditMenu(p, fileName, page, type, grep);
-									return false;
-								}
-
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return false;
-
-					} else if (item.getItemMeta().getLore().contains(renameChamber)) {
-
-						p.closeInventory();
-						p.sendMessage("@exit ¤òÆşÎÏ¤¹¤ë¤È¥­¥ã¥ó¥»¥ë¤·¤ÆÌá¤ê¤Ş¤¹");
-						p.sendMessage("¿·¤·¤¤Ì¾Á°¤ò¥Á¥ã¥Ã¥ÈÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-						final Player pl = p;
-						try {
-							new StringInputWait(p, new EditorFunction() {
-
-								@Override
-								public boolean reveive(String str) {
-
-									if (str.equalsIgnoreCase(exit)) {
-										OpenChamberEditMenu(p, fileName, page, type, str);
-										return false;
-									} else if (containsMultiByteChar(str)) {
-										pl.sendMessage("¥Á¥§¥ó¥Ğ¡¼¤Î¥Õ¥¡¥¤¥ëÌ¾¤Ë¥Ş¥ë¥Á¥Ğ¥¤¥ÈÊ¸»ú¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó");
-										pl.sendMessage("±Ñ¿ô»ú¤Ê¤É¤ò»È¤Ã¤Æ¤¯¤À¤µ¤¤ >");
-
-										return true;
-									} else if (DataSystem.isCompleteExist(str)) {
-										pl.sendMessage(str + " ¤Ï´û¤ËÂ¸ºß¤¹¤ë¥Á¥§¥ó¥Ğ¡¼¥Õ¥¡¥¤¥ë¤Ç¤¹¡£");
-										pl.sendMessage("¤Û¤«¤Î¥Õ¥¡¥¤¥ëÌ¾¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-										return true;
-									} else if (str.indexOf("@") != -1) {
-										pl.sendMessage("¥Á¥§¥ó¥Ğ¡¼Ì¾¤Ë@¤Ï»È¤¨¤Ş¤»¤ó");
-										pl.sendMessage("¤Û¤«¤Î¥Õ¥¡¥¤¥ëÌ¾¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤ >");
-										return true;
-									} else {
-										DataSystem.rename(fileName, str);
-										OpenChamberEditMenu(p, str, page, type, grep);
-										return false;
-									}
-								}
-
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return false;
-
-					} else if (item.getItemMeta().getLore().contains(deleteChamber)) {
-
-						p.closeInventory();
-						p.sendMessage("y ¤òÆşÎÏ¤¹¤ë¤È¥Á¥§¥ó¥Ğ¡¼¤òºï½ü¤·¤Ş¤¹ ºï½ü¤µ¤ì¤¿¥Á¥§¥ó¥Ğ¡¼¤ÏÌá¤»¤Ş¤»¤ó¡£");
-						p.sendMessage("y°Ê³°¤òÆşÎÏ¤¹¤ë¤È¥­¥ã¥ó¥»¥ë¤·¤Ş¤¹ >");
-						try {
-							new StringInputWait(p, new EditorFunction() {
-
-								@Override
-								public boolean reveive(String str) {
-
-									if (str.equalsIgnoreCase("y")) {
-										DataSystem.delete(fileName);
-										try {
-											OpenGUI(p, page, type, grep);
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-										return false;
-									} else {
-										OpenChamberEditMenu(p, fileName, page, type, str);
-										return false;
-									}
-								}
-
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return false;
-
-					} else if (item.getItemMeta().getLore().contains(returnMenu)) {
-						try {
-							OpenGUI(p, page, type, grep);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return false;
-					} else if (item.getItemMeta().getLore().contains(publish)) {
-						d.setPublished(!d.isPublished());
-						DataSystem.Save(d, fileName);
-						OpenChamberEditMenu(p, fileName, page, type, grep);
-						return false;
-					} else if (item.getItemMeta().getLore().contains(gunTypeChange)) {
-
-						switch (d.getPortalGunGive()) {
-
-						case DUAL_PORTAL_DEVICE:
-							d.setPortalGunGive(GunType.SINGLE_PORTAL_DEVICE);
-							break;
-						case SINGLE_PORTAL_DEVICE:
-							d.setPortalGunGive(GunType.NONE);
-							break;
-						case NONE:
-							d.setPortalGunGive(GunType.DUAL_PORTAL_DEVICE);
-							break;
-						default:
-							d.setPortalGunGive(GunType.DUAL_PORTAL_DEVICE);
-							break;
-
-						}
-
-						DataSystem.Save(d, fileName);
-						OpenChamberEditMenu(p, fileName, page, type, grep);
-						return false;
-					} else {
-						return true;
-					}
-
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static Location reserve() {
-		Location loc = new Location(Bukkit.getWorld(PortalGun.EditorWorldName), 0, 0, 0);
-		int i = 0;
-		while (true) {
-
-			if (i >= 5) {
-				return null;
-			}
-
-			if (locs.contains(loc)) {
-				loc = loc.add(65, 0, 0);
-				i++;
-			} else {
-				return loc;
-			}
-
-		}
-	}
-
-	private static ItemStack createItem(Material material, int stack, int dataValue, String Name, String... Lore) {
-		ItemStack item = new ItemStack(material, stack, (short) dataValue);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Name);
-		ArrayList<String> lore = new ArrayList<String>();
-		for (int i = 0; i < Lore.length; i++) {
-			lore.add(((i < Lore.length - 1) ? ChatColor.RESET + "" : "") + Lore[i]);
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		return item;
-	}
-
-	private static boolean containsMultiByteChar(String s) {
-		char[] chars = s.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
-			if (!((c <= '\u007e') || // ±Ñ¿ô»ú
-					(c == '\u00a5') || // \µ­¹æ
-					(c == '\u203e') || // ~µ­¹æ
-					(c >= '\uff61' && c <= '\uff9f') // È¾³Ñ¥«¥Ê
-			)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static ItemStack createItem(TestChamberData d) {
-		return createItem(Material.IRON_BLOCK, 1, 0, d.getFileName(), "¥¿¥¤¥È¥ë: " + d.getChamberName(),
-				"ºîÀ®¼Ô: " + d.getDesignerName(), "ºîÀ®Æü»ş: " + "WIP", "É¾²ÁÃÍ: " + d.getPopurality(),
-				"" + d.getPlayed() + "²ó¥Æ¥¹¥È¤µ¤ì¤Æ¤¤¤ë", d.isPublished() ? "¸ø³«ºÑ¤ß" : "Èó¸ø³«", chamber);
-	}
-
-}
+      for (int i = 0; i < pageper; i++)
+      {
+        int index = i + pageper * page;
+
+        if (index >= refinedData.size()) {
+          break;
+        }
+
+        TestChamberData d = (TestChamberData)refinedData.get(index);
+
+        UI.setItem(i + 3, createItem(d));
+      }
+
+
+      p.openInventory(UI);
+
+      final SortType t = type;
+
+      new ItemClickWait(p, new ClickFunction()
+      {
+
+        public boolean click(Player p, ItemStack item)
+        {
+          if ((item.hasItemMeta()) && (item.getItemMeta().hasLore()) && (item.getItemMeta().hasDisplayName()))
+          {
+            if (item.getItemMeta().getLore().contains(next)) {
+              p.closeInventory();
+              try {
+                EditChamberSelector.OpenGUI(p, tpage + 1, t, grep);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+              return false; }
+            if (item.getItemMeta().getLore().contains(ret)) {
+              p.closeInventory();
+              try {
+                EditChamberSelector.OpenGUI(p, tpage - 1, t, grep);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+              return false;
+            }
+            if (item.getItemMeta().getLore().contains(search))
+            {
+              p.closeInventory();
+              p.sendMessage("@exit ã‚’å…¥åŠ›ã™ã‚‹ã¨ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¦æˆ»ã‚Šã¾ã™");
+              p.sendMessage("æ¤œç´¢æ–‡å­—åˆ—ã‚’ãƒãƒ£ãƒƒãƒˆå…¥åŠ›ã—ã¦ãã ã•ã„ >");
+              final Player pl = p;
+              try {
+                new StringInputWait(p, new EditorFunction()
+                {
+                  public boolean reveive(String str)
+                  {
+                    if (str.equalsIgnoreCase(exit)) {
+                      try
+                      {
+                        EditChamberSelector.OpenGUI(pl, tpage, t, "");
+                      } catch (Exception e) {
+                        e.printStackTrace();
+                      }
+                    } else {
+                      try {
+                        EditChamberSelector.OpenGUI(pl, 0, t, str);
+                      } catch (Exception e) {
+                        e.printStackTrace();
+                      }
+                    }
+                    return false;
+                  }
+                });
+              }
+              catch (Exception e) {
+                e.printStackTrace();
+              }
+
+              return false; }
+            if (item.getItemMeta().getLore().contains(create))
+            {
+              Location loc = EditChamberSelector.reserve();
+
+              if (loc == null) {
+                p.sendMessage("ã‚¨ãƒ‡ã‚£ã‚¿ãƒ¼ãŒæº€å“¡ã§ã™ã€‚");
+                try {
+                  EditChamberSelector.OpenGUI(p, tpage, t, grep);
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+                return false;
+              }
+              p.sendMessage("@exit ã‚’å…¥åŠ›ã™ã‚‹ã¨ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¦æˆ»ã‚Šã¾ã™");
+              p.sendMessage("æ–°è¦ä½œæˆã™ã‚‹ãƒã‚§ãƒ³ãƒãƒ¼ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãƒãƒ£ãƒƒãƒˆå…¥åŠ›ã—ã¦ãã ã•ã„ >");
+
+
+              p.closeInventory();
+
+              final Player pl = p;
+              try {
+                new StringInputWait(p, new EditorFunction()
+                {
+
+                  public boolean reveive(String str)
+                  {
+                    if (str.equalsIgnoreCase(exit)) {
+                      try {
+                        EditChamberSelector.OpenGUI(pl, tpage, t, "");
+                      } catch (Exception e) {
+                        e.printStackTrace();
+                      }
+                      return false; }
+                    if (EditChamberSelector.containsMultiByteChar(str)) {
+                      pl.sendMessage("ãƒã‚§ãƒ³ãƒãƒ¼ã®ãƒ•ã‚¡ã‚¤ãƒ«åã«ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“");
+                      pl.sendMessage("è‹±æ•°å­—ãªã©ã‚’ä½¿ã£ã¦ãã ã•ã„ >");
+
+                      return true; }
+                    if (str.indexOf("@") != -1) {
+                      pl.sendMessage("ãƒã‚§ãƒ³ãƒãƒ¼åã«@ã¯ä½¿ãˆã¾ã›ã‚“");
+                      pl.sendMessage("ã»ã‹ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ >");
+                      return true; }
+                    if (DataSystem.isCompleteExist(str)) {
+                      pl.sendMessage(str + " ã¯æ—¢ã«å­˜åœ¨ã™ã‚‹ãƒã‚§ãƒ³ãƒãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã§ã™ã€‚");
+                      pl.sendMessage("ã»ã‹ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ >");
+                      return true;
+                    }
+
+                    try
+                    {
+                      pl.sendMessage("ã—ã°ã‚‰ããŠå¾…ã¡ãã ã•ã„");
+
+                      if (TestChamberEditor.getEditor(pl) != null) {
+                        pl.sendMessage(ChatColor.RED + "ã‚¨ãƒ©ãƒ¼ï¼šã“ã®ã‚¨ãƒ©ãƒ¼ã¯èµ·ã“ã£ã¦ã¯ã„ã‘ãªã„ã®ã§ç®¡ç†äººã«å ±å‘Šã—ã¦ãã ã•ã„ã€‚");
+                        System.out.println("ERROR! " + pl.getName());
+                      }
+
+                      TestChamber tc = new TestChamber();
+                      TestChamberData td = new TestChamberData(pl.getUniqueId(), str,
+                        Calendar.getInstance());
+
+                      td.setDesignerName(pl.getName());
+
+                      try
+                      {
+                        DataSystem.Save(tc, td, str);
+
+                        EditChamberSelector.OpenChamberEditMenu(pl, str, tpage, t, grep);
+                      }
+                      catch (Exception e) {
+                        e.printStackTrace();
+                      }
+
+                    }
+                    catch (Exception e)
+                    {
+                      e.printStackTrace();
+                    }
+                    return false;
+                  }
+
+                });
+              }
+              catch (Exception e)
+              {
+                e.printStackTrace();
+              }
+
+              return false; }
+            if (item.getItemMeta().getLore().contains(chamber))
+            {
+              String chamberFileName = item.getItemMeta().getDisplayName();
+
+              EditChamberSelector.OpenChamberEditMenu(p, chamberFileName, tpage, t, grep);
+
+              return false;
+            }
+
+            return true;
+          }
+
+
+          return true;
+        }
+      });
+    }
+
+
+    private static final String editChamber = "@EDIT";
+
+    private static final String renameChamber = "@RENAME";
+
+    private static final String deleteChamber = "@DELETE";
+
+    private static final String returnMenu = "@RETURNMENU";
+
+    private static final String publish = "@PUBLISH";
+    private static final String gunTypeChange = "@GUNTYPE";
+    private static final String setName = "@SETNAME";
+    private static void OpenChamberEditMenu(Player p, final String fileName, final int page, final SortType type, final String grep)
+    {
+      p.closeInventory();
+
+      Inventory UI = Bukkit.getServer().createInventory(null, 9, fileName);
+
+      final TestChamberData d = DataSystem.getChamberData(fileName);
+
+      UI.setItem(0, createItem(d));
+      UI.setItem(1, createItem(Material.EMPTY_MAP, 1, 0, "ã‚¿ã‚¤ãƒˆãƒ«ã‚»ãƒƒãƒˆ", new String[] { "@SETNAME" }));
+      UI.setItem(2, createItem(Material.MAP, 1, 0, "ãƒã‚§ãƒ³ãƒãƒ¼ç·¨é›†", new String[] { "@EDIT" }));
+      UI.setItem(3, createItem(Material.EMPTY_MAP, 1, 0, "ãƒã‚§ãƒ³ãƒãƒ¼åå¤‰æ›´", new String[] { "@RENAME" }));
+      UI.setItem(4, createItem(Material.BARRIER, 1, 0, "ãƒã‚§ãƒ³ãƒãƒ¼å‰Šé™¤", new String[] { "@DELETE" }));
+      UI.setItem(5, createItem(Material.PAPER, 1, 0, d.isPublished() ? "éå…¬é–‹ã«ã™ã‚‹" : "å…¬é–‹ã™ã‚‹", new String[] { "@PUBLISH" }));
+
+      String label = "æ”¯çµ¦ã‚¿ã‚¤ãƒ—å¤‰æ›´:";
+      String lore = "ç¾åœ¨ã®ã‚¿ã‚¤ãƒ—:";
+
+      switch (d.getPortalGunGive()) {
+      case DUAL_PORTAL_DEVICE:
+        label = label + "ã‚·ãƒ³ã‚°ãƒ«";
+        lore = lore + "ãƒ‡ãƒ¥ã‚¢ãƒ«";
+        break;
+      case NONE:
+        label = label + "æ”¯çµ¦ãªã—";
+        lore = lore + "ã‚·ãƒ³ã‚°ãƒ«";
+        break;
+      case SINGLE_PORTAL_DEVICE:
+        label = label + "ãƒ‡ãƒ¥ã‚¢ãƒ«";
+        lore = lore + "æ”¯çµ¦ãªã—";
+        break;
+      default:
+        label = label + "ERROR";
+        lore = lore + "ERROR";
+      }
+
+
+
+      UI.setItem(6, createItem(Material.WOOD_SWORD, 1, 0, label, new String[] { lore, "@GUNTYPE" }));
+
+      UI.setItem(8, createItem(Material.ARROW, 1, 0, "æˆ»ã‚‹", new String[] { "@RETURNMENU" }));
+
+      p.openInventory(UI);
+      try {
+        new ItemClickWait(p, new ClickFunction()
+        {
+
+
+          public boolean click(final Player p, ItemStack item)
+          {
+
+            if (item.getItemMeta().getLore().contains(editChamber))
+            {
+              p.sendMessage("ã—ã°ã‚‰ããŠå¾…ã¡ãã ã•ã„");
+              p.closeInventory();
+
+              Location loc = EditChamberSelector.reserve();
+
+              if (loc == null) {
+                p.sendMessage("ã‚¨ãƒ‡ã‚£ã‚¿ãƒ¼ãŒæº€å“¡ã§ã™ã€‚");
+                EditChamberSelector.OpenChamberEditMenu(p, fileName, page, type, grep);
+                return false;
+              }
+
+              if (TestChamberEditor.getEditor(p) != null) {
+                p.sendMessage(ChatColor.RED + "ã‚¨ãƒ©ãƒ¼ï¼šã“ã®ã‚¨ãƒ©ãƒ¼ã¯èµ·ã“ã£ã¦ã¯ã„ã‘ãªã„ã®ã§ç®¡ç†äººã«å ±å‘Šã—ã¦ãã ã•ã„ã€‚");
+                System.out.println("ERROR! " + p.getName());
+                return false;
+              }
+
+              TestChamber tc = DataSystem.getChamberObject(fileName);
+              TestChamberData td = d;
+              try
+              {
+                TestChamberEditor edit = new TestChamberEditor(loc, tc, td, p);
+
+                EditChamberSelector.locs.add(loc);
+
+                edit.setVisible(true);
+
+                edit.StartEdit();
+
+                return false;
+              }
+              catch (Exception e) {
+                e.printStackTrace();
+
+
+                return false;
+              } }
+            if (item.getItemMeta().getLore().contains(setName))
+            {
+              p.closeInventory();
+              p.sendMessage("@exit ã‚’å…¥åŠ›ã™ã‚‹ã¨ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¦æˆ»ã‚Šã¾ã™");
+              p.sendMessage("ã‚¿ã‚¤ãƒˆãƒ«ã‚’ãƒãƒ£ãƒƒãƒˆå…¥åŠ›ã—ã¦ãã ã•ã„ >");
+              try {
+                new StringInputWait(p, new EditorFunction()
+                {
+
+                  public boolean reveive(String str)
+                  {
+                    d.setChamberName(str);
+                    DataSystem.Save(d, fileName);
+
+                    EditChamberSelector.OpenChamberEditMenu(p, fileName, page, type, grep);
+                    return false;
+                  }
+                });
+              }
+              catch (Exception e) {
+                e.printStackTrace();
+              }
+              return false;
+            }
+            if (item.getItemMeta().getLore().contains(renameChamber))
+            {
+              p.closeInventory();
+              p.sendMessage("@exit ã‚’å…¥åŠ›ã™ã‚‹ã¨ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¦æˆ»ã‚Šã¾ã™");
+              p.sendMessage("æ–°ã—ã„åå‰ã‚’ãƒãƒ£ãƒƒãƒˆå…¥åŠ›ã—ã¦ãã ã•ã„ >");
+              final Player pl = p;
+              try {
+                new StringInputWait(p, new EditorFunction()
+                {
+
+                  public boolean reveive(String str)
+                  {
+                    if (str.equalsIgnoreCase("@exit")) {
+                      EditChamberSelector.OpenChamberEditMenu(p, fileName, page, type, str);
+                      return false; }
+                    if (EditChamberSelector.containsMultiByteChar(str)) {
+                      pl.sendMessage("ãƒã‚§ãƒ³ãƒãƒ¼ã®ãƒ•ã‚¡ã‚¤ãƒ«åã«ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“");
+                      pl.sendMessage("è‹±æ•°å­—ãªã©ã‚’ä½¿ã£ã¦ãã ã•ã„ >");
+
+                      return true; }
+                    if (DataSystem.isCompleteExist(str)) {
+                      pl.sendMessage(str + " ã¯æ—¢ã«å­˜åœ¨ã™ã‚‹ãƒã‚§ãƒ³ãƒãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã§ã™ã€‚");
+                      pl.sendMessage("ã»ã‹ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ >");
+                      return true; }
+                    if (str.indexOf("@") != -1) {
+                      pl.sendMessage("ãƒã‚§ãƒ³ãƒãƒ¼åã«@ã¯ä½¿ãˆã¾ã›ã‚“");
+                      pl.sendMessage("ã»ã‹ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ >");
+                      return true;
+                    }
+                    DataSystem.rename(fileName, str);
+                    EditChamberSelector.OpenChamberEditMenu(p, str, page, type, grep);
+                    return false;
+                  }
+                });
+              }
+              catch (Exception e)
+              {
+                e.printStackTrace();
+              }
+              return false;
+            }
+            if (item.getItemMeta().getLore().contains(deleteChamber))
+            {
+              p.closeInventory();
+              p.sendMessage("y ã‚’å…¥åŠ›ã™ã‚‹ã¨ãƒã‚§ãƒ³ãƒãƒ¼ã‚’å‰Šé™¤ã—ã¾ã™ å‰Šé™¤ã•ã‚ŒãŸãƒã‚§ãƒ³ãƒãƒ¼ã¯æˆ»ã›ã¾ã›ã‚“ã€‚");
+              p.sendMessage("yä»¥å¤–ã‚’å…¥åŠ›ã™ã‚‹ã¨ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¾ã™ >");
+              try {
+                new StringInputWait(p, new EditorFunction()
+                {
+
+                  public boolean reveive(String str)
+                  {
+                    if (str.equalsIgnoreCase("y")) {
+                      DataSystem.delete(fileName);
+                      try {
+                        EditChamberSelector.OpenGUI(p, page, type, grep);
+                      } catch (Exception e) {
+                        e.printStackTrace();
+                      }
+                      return false;
+                    }
+                    EditChamberSelector.OpenChamberEditMenu(p, fileName, page, type, str);
+                    return false;
+                  }
+                });
+              }
+              catch (Exception e)
+              {
+                e.printStackTrace();
+              }
+              return false;
+            }
+            if (item.getItemMeta().getLore().contains(returnMenu)) {
+              try {
+                EditChamberSelector.OpenGUI(p, page, type, grep);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+              return false; }
+            if (item.getItemMeta().getLore().contains(publish)) {
+              d.setPublished(!d.isPublished());
+              DataSystem.Save(d, fileName);
+              EditChamberSelector.OpenChamberEditMenu(p, fileName, page, type, grep);
+              return false; }
+            if (item.getItemMeta().getLore().contains(gunTypeChange))
+            {
+              switch (d.getPortalGunGive())
+              {
+              case DUAL_PORTAL_DEVICE:
+                d.setPortalGunGive(GunType.SINGLE_PORTAL_DEVICE);
+                break;
+              case NONE:
+                d.setPortalGunGive(GunType.NONE);
+                break;
+              case SINGLE_PORTAL_DEVICE:
+                d.setPortalGunGive(GunType.DUAL_PORTAL_DEVICE);
+                break;
+              default:
+                d.setPortalGunGive(GunType.DUAL_PORTAL_DEVICE);
+              }
+
+
+
+              DataSystem.Save(d, fileName);
+              EditChamberSelector.OpenChamberEditMenu(p, fileName, page, type, grep);
+              return false;
+            }
+            return true;
+          }
+        });
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
+
+    private static Location reserve() {
+      Location loc = new Location(Bukkit.getWorld(com.murabi10.portalgunreloaded.PortalGun.EditorWorldName), 0.0D, 0.0D, 0.0D);
+      int i = 0;
+      for (;;)
+      {
+        if (i >= 5) {
+          return null;
+        }
+
+        if (!locs.contains(loc)) break;
+        loc = loc.add(65.0D, 0.0D, 0.0D);
+        i++;
+      }
+      return loc;
+    }
+
+
+
+    private static ItemStack createItem(Material material, int stack, int dataValue, String Name, String... Lore)
+    {
+      ItemStack item = new ItemStack(material, stack, (short)dataValue);
+      ItemMeta meta = item.getItemMeta();
+      meta.setDisplayName(Name);
+      ArrayList<String> lore = new ArrayList<String>();
+      for (int i = 0; i < Lore.length; i++) {
+        lore.add((i < Lore.length - 1 ? ChatColor.RESET : "") + Lore[i]);
+      }
+      meta.setLore(lore);
+      item.setItemMeta(meta);
+      return item;
+    }
+
+    private static boolean containsMultiByteChar(String s) {
+      char[] chars = s.toCharArray();
+      for (int i = 0; i < chars.length; i++) {
+        char c = chars[i];
+        if ((c > '~') &&
+          (c != 'Â¥') &&
+          (c != 'â€¾') && (
+          (c < 65377) || (c > 65439)))
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private static ItemStack createItem(TestChamberData d) {
+      return createItem(Material.IRON_BLOCK, 1, 0, d.getFileName(), new String[] { "ã‚¿ã‚¤ãƒˆãƒ«: " + d.getChamberName(),
+        "ä½œæˆè€…: " + d.getDesignerName(), "ä½œæˆæ—¥æ™‚: WIP", "è©•ä¾¡å€¤: " + d.getPopurality(),
+        d.getPlayed() + "å›ãƒ†ã‚¹ãƒˆã•ã‚Œã¦ã„ã‚‹", d.isPublished() ? "å…¬é–‹æ¸ˆã¿" : "éå…¬é–‹", "@CHAMBER" });
+    }
+ }
+
+
+/* Location:              C:\Users\2SC1815\Desktop\PortalGunReloaded-1.7.2.jar!\com\murabi10\portalgunreloaded\selector\EditChamberSelector.class
+ * Java compiler version: 7 (51.0)
+ * JD-Core Version:       0.7.1
+ */

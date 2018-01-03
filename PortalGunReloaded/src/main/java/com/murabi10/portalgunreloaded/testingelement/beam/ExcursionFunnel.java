@@ -1,33 +1,34 @@
-package com.murabi10.portalgunreloaded.testingelement.beam;
+/*    */ package com.murabi10.portalgunreloaded.testingelement.beam;
+/*    */ 
+/*    */ import com.murabi10.portalgunreloaded.testingelement.ElementType;
+/*    */ import org.bukkit.Location;
+/*    */ import org.bukkit.block.BlockFace;
+/*    */ 
+/*    */ public class ExcursionFunnel extends Beam
+/*    */ {
+/*    */   protected ExcursionFunnel(Location ChamberOrigin, ElementType type, BlockFace face, int X, int Y, int Z)
+/*    */   {
+/* 11 */     super(ChamberOrigin, type, face, X, Y, Z);
+/*    */   }
+/*    */   
+/*    */ 
+/*    */ 
+/*    */   public BlockFace laser(Location loc, BlockFace bf)
+/*    */   {
+/* 18 */     return null;
+/*    */   }
+/*    */   
+/*    */ 
+/*    */   public boolean check()
+/*    */   {
+/* 24 */     return false;
+/*    */   }
+/*    */   
+/*    */   public void destroy() {}
+/*    */ }
 
-import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 
-import com.murabi10.portalgunreloaded.testingelement.ElementType;
-
-public class ExcursionFunnel extends Beam {
-
-	protected ExcursionFunnel(Location ChamberOrigin, ElementType type, BlockFace face, int X, int Y, int Z) {
-		super(ChamberOrigin, type, face, X, Y, Z);
-		// TODO 自動生成されたコンストラクター・スタブ
-	}
-
-	@Override
-	public BlockFace laser(Location loc, BlockFace bf) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
-
-	@Override
-	public boolean check() {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
-	}
-
-	@Override
-	public void destroy() {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
-
-}
+/* Location:              C:\Users\2SC1815\Desktop\PortalGunReloaded-1.7.2.jar!\com\murabi10\portalgunreloaded\testingelement\beam\ExcursionFunnel.class
+ * Java compiler version: 7 (51.0)
+ * JD-Core Version:       0.7.1
+ */

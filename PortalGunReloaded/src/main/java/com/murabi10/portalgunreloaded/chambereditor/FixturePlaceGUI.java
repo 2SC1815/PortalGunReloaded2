@@ -1,322 +1,326 @@
-package com.murabi10.portalgunreloaded.chambereditor;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-
-import com.murabi10.portalgunreloaded.PortalGun;
-import com.murabi10.portalgunreloaded.gui.Button;
-import com.murabi10.portalgunreloaded.gui.GUI;
-import com.murabi10.portalgunreloaded.gui.GUIFunction;
-import com.murabi10.portalgunreloaded.testingelement.LinkType;
-import com.murabi10.portalgunreloaded.testingelement.TestingElement;
-import com.murabi10.portalgunreloaded.testingelement.area.StartPoint;
-
-public class FixturePlaceGUI extends GUI {
-
-	@Override
-	public void init() {
-
-		setMenuName("•¢•Ø•∑•Á•Û§Ú¡™§Û§«§Ø§¿§µ§§");
-		setSize(2);
-
-		/*
-		 * addbutton(new Button(true, Material.STONE, 1, (short)0,
-		 * "DEBUG : PORTAL SPECIFICATIONS", 3, new Function() {
-		 *
-		 * @Override public void click(Player p, ClickType type) { // TODO
-		 * º´∆∞¿∏¿Æ§µ§Ï§ø•·•Ω•√•…°¶•π•ø•÷
-		 *
-		 * }
-		 *
-		 * }, "", ""));
-		 */
-
-		addbutton(new Button(Material.DIAMOND_BLOCK, 1, (short) 0, "•π•ø°º•»√œ≈¿§Ú¿ﬂƒÍ", 0, new GUIFunction() {
-
-			@Override
-			public boolean click(Player p, ClickType type) {
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null) {
-
-					StartPoint start = new StartPoint(editor.getOrigin(), editor.getX(p.getLocation()),
-							editor.getY(p.getLocation()), editor.getZ(p.getLocation()));
-
-					editor.AddTestElement(start);
-
-					start.initRunnable();
-
-				}
-				return true;
-
-			}
-
-		}, "•π•ø°º•»√œ≈¿§Ú∫£Œ©§√§∆§§§ÎæÏΩÍ§À", "¿ﬂƒÍ§∑§ﬁ§π°£", "•π•ø°º•»√œ≈¿§¨À‰§ﬁ§√§∆§§§Î§»•∆•π•»§¨≥´ªœ§«§≠§ﬁ§ª§Û"));
-
-		addbutton(new Button(Material.CONCRETE, 1, (short) 7, "«Ú§§ …§Úπı§Ø§π§Î", 1, new GUIFunction() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public boolean click(Player p, ClickType type) {
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null && editor.isCuboid()) {
-
-					int minx = Math.min(editor.getPos1().getBlockX(), editor.getPos2().getBlockX()),
-							miny = Math.min(editor.getPos1().getBlockY(), editor.getPos2().getBlockY()),
-							minz = Math.min(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ()),
-							maxx = Math.max(editor.getPos1().getBlockX(), editor.getPos2().getBlockX()),
-							maxy = Math.max(editor.getPos1().getBlockY(), editor.getPos2().getBlockY()),
-							maxz = Math.max(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
-
-					for (int x = minx; x < maxx + 1; x++) {
-						for (int y = miny; y < maxy + 1; y++) {
-							for (int z = minz; z < maxz + 1; z++) {
-
-								Block b = new Location(editor.getOrigin().getWorld(), x, y, z).getBlock();
-
-								if (b.getType().equals(Material.CONCRETE)) {
-									b.setType(PortalGun.BLACK_PANEL.getMaterial());
-									b.setData(PortalGun.BLACK_PANEL.GetData());
-								}
-
-							}
-						}
-					}
-				}
-				return true;
-
-			}
-
-		}, "¡™¬Ú»œ∞œ§Œ«Ú§§ …§Úπı§Ø§∑§ﬁ§π°£", "πı§§ …§À§œ•›°º•ø•Î§¨¬«§∆§ﬁ§ª§Û°£"));
-
-		addbutton(new Button(Material.CONCRETE, 1, (short) 0, "πı§§ …§Ú«Ú§Ø§π§Î", 2, new GUIFunction() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public boolean click(Player p, ClickType type) {
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null && editor.isCuboid()) {
-
-					int minx = Math.min(editor.getPos1().getBlockX(), editor.getPos2().getBlockX()),
-							miny = Math.min(editor.getPos1().getBlockY(), editor.getPos2().getBlockY()),
-							minz = Math.min(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ()),
-							maxx = Math.max(editor.getPos1().getBlockX(), editor.getPos2().getBlockX()),
-							maxy = Math.max(editor.getPos1().getBlockY(), editor.getPos2().getBlockY()),
-							maxz = Math.max(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
-
-					for (int x = minx; x < maxx + 1; x++) {
-						for (int y = miny; y < maxy + 1; y++) {
-							for (int z = minz; z < maxz + 1; z++) {
-
-								Block b = new Location(editor.getOrigin().getWorld(), x, y, z).getBlock();
-
-								if (b.getType().equals(Material.CONCRETE)) {
-									b.setType(PortalGun.WHITE_PANEL.getMaterial());
-									b.setData(PortalGun.WHITE_PANEL.GetData());
-								}
-
-							}
-						}
-					}
-				}
-				return true;
-
-			}
-
-		}, "¡™¬Ú»œ∞œ§Œπı§§ …§Ú«Ú§Ø§∑§ﬁ§π°£", "«Ú§§ …§À§œ•›°º•ø•Î§¨¬«§∆§ﬁ§π°£"));
-
-		addbutton(new Button(Material.BARRIER, 1, (short) 0, "¡™¬Ú»œ∞œ§Ú≤ÚΩ¸", 3, new GUIFunction() {
-
-			@Override
-			public boolean click(Player p, ClickType type) {
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null) {
-					editor.clearPos();
-				}
-				return true;
-
-			}
-
-		}, "¡™¬Ú»œ∞œ§Ú≤ÚΩ¸§∑§ﬁ§π°£"));
-
-		addbutton(new Button(Material.REDSTONE_TORCH_ON, 1, (short) 0, "•∆•π•»¡ı√÷§Ú¿ﬂ√÷§π§Î", 4, new GUIFunction() {
-
-			@Override
-			public boolean click(Player p, ClickType type) {
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null) {
-					p.closeInventory();
-					PortalGun.gimmicks.openGUI(p);
-				}
-				return false;
-
-			}
-
-		}, "•Ï°º•∂°º§‰ ™º¡æ√µÓ•∞•Í•√•…§ §…§Œ", "•∆•π•»Õ—•Æ•ﬂ•√•Ø§Ú¿ﬂ√÷§∑§ﬁ§π°£"));
-
-		addbutton(new Button(Material.BARRIER, 1, (short) 0, "¡™¬Ú»œ∞œ∆‚•Ø•Í•¢", 5, new GUIFunction() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public boolean click(Player p, ClickType type) {
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null && editor.isCuboid()) {
-
-					int minx = Math.min(editor.getPos1().getBlockX(), editor.getPos2().getBlockX()),
-							miny = Math.min(editor.getPos1().getBlockY(), editor.getPos2().getBlockY()),
-							minz = Math.min(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ()),
-							maxx = Math.max(editor.getPos1().getBlockX(), editor.getPos2().getBlockX()),
-							maxy = Math.max(editor.getPos1().getBlockY(), editor.getPos2().getBlockY()),
-							maxz = Math.max(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
-
-					for (int x = minx; x < maxx + 1; x++) {
-						for (int y = miny; y < maxy + 1; y++) {
-							for (int z = minz; z < maxz + 1; z++) {
-
-								Block b = new Location(editor.getOrigin().getWorld(), x, y, z).getBlock();
-
-								if (editor.getElement(b.getLocation()) != null) {
-									editor.RemoveElement(b.getLocation());
-								}
-								if (!(b.isLiquid() || b.isEmpty()) || b.getType().equals(Material.CONCRETE)) {
-									b.setType(PortalGun.BLACK_PANEL.getMaterial());
-									b.setData(PortalGun.BLACK_PANEL.GetData());// TODO
-								}
-
-							}
-						}
-					}
-				}
-				return true;
-
-			}
-
-		}, "¡™¬Ú»œ∞œ∆‚§Œ«Ú/πı …∞ ≥∞§Œ¿ﬂ√÷ ™", "° •∆•π•»¡ı√÷§‰∏˜∏ª§‰§Ω§Œ¬æ•÷•Ì•√•Ø°À§ÚΩ¸µÓ§∑°¢", "¬Â§Ô§Í§Àπı§§ …§Ú¿ﬂ√÷§∑§ﬁ§π°£"));
-
-		addbutton(new Button(Material.STONE, 1, (short) 0, "•ª°º•÷", 6, new GUIFunction() {
-
-			@Override
-			public boolean click(Player p, ClickType type) {
-
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null) {
-					editor.SaveToFile();
-				}
-				return true;
-
-			}
-
-		}, "•∆•π•»•¡•ß•Û•–°º§Ú ›¬∏§∑§ﬁ§π°£"));
-
-		addbutton(new Button(Material.STONE, 1, (short) 0, "•ª°º•÷§∑§∆Ω™Œª", 7, new GUIFunction() {
-
-			@Override
-			public boolean click(Player p, ClickType type) {
-
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null) {
-					editor.Exit();
-				}
-				return false;
-
-			}
-
-		}, "•∆•π•»•¡•ß•Û•–°º§Ú ›¬∏§∑§∆§´§È", "Ω™Œª§∑§ﬁ§π°£"));
-
-		addbutton(new Button(Material.IRON_FENCE, 1, (short) 0, "•Í•Û•Ø", 9, new GUIFunction() {
-
-			@Override
-			public boolean click(Player p, ClickType type) {
-
-				TestChamberEditor editor = TestChamberEditor.getEditor(p);
-
-				if (editor != null) {
-
-					if (!editor.Pos1Empt() && !editor.Pos2Empt()) {
-
-						TestingElement e1 = editor.getElement(editor.getPos1());
-						TestingElement e2 = editor.getElement(editor.getPos2());
-
-						if (e1 != null && e2 != null) {
-
-							if (e1.equals(e2)) {
-								p.sendMessage("∆˛Ω–Œœ§¨∆±§∏¡ı√÷§«§π");
-								return false;
-							}
-
-							if (e1.getLinkType().equals(LinkType.DNC)) {
-								p.sendMessage("±¶•Ø•Í•√•Ø¡™¬Ú§∑§ø¡ı√÷§œ∆˛Ω–Œœ…‘≤ƒ«Ω§«§π");
-								return false;
-							}
-
-							if (e2.getLinkType().equals(LinkType.DNC)) {
-								p.sendMessage("∫∏•Ø•Í•√•Ø¡™¬Ú§∑§ø¡ı√÷§œ∆˛Ω–Œœ…‘≤ƒ«Ω§«§π");
-								return false;
-							}
-
-							if (e1.getLinkType().equals(LinkType.OUTPUT) && e2.getLinkType().equals(LinkType.OUTPUT)) {
-								p.sendMessage("Ω–Œœ¡ı√÷∆±ªŒ§œ•Í•Û•Ø§«§≠§ﬁ§ª§Û");
-								return false;
-							} else if (e1.getLinkType().equals(LinkType.INPUT)
-									&& e2.getLinkType().equals(LinkType.INPUT)) {
-								p.sendMessage("∆˛Œœ¡ı√÷∆±ªŒ§œ•Í•Û•Ø§«§≠§ﬁ§ª§Û");
-								return false;
-							}
-
-							if ((e1.getLinkType().equals(LinkType.OUT_IN) && e1.getLinkType().equals(LinkType.OUT_IN))
-									|| ((e1.getLinkType().equals(LinkType.OUTPUT)
-											|| e1.getLinkType().equals(LinkType.OUT_IN))
-											&& e2.getLinkType().equals(LinkType.INPUT))
-									|| ((e2.getLinkType().equals(LinkType.INPUT)
-											|| e2.getLinkType().equals(LinkType.OUT_IN))
-											&& e1.getLinkType().equals(LinkType.OUTPUT))) {
-								if (e1.getLinkType().equals(LinkType.OUT_IN) && e1.getLinkType().equals(LinkType.OUT_IN)) {
-									p.sendMessage("∆˛Ω–Œœ¥ÿ∑∏§¨º´∆∞∏°Ω–§«§≠§ §´§√§ø§Œ§«±¶•Ø•Í•√•Ø¡™¬Ú§∑§ø¡ı√÷§ÚΩ–Œœ§»§∑§ﬁ§∑§ø");
-								}
-								editor.Link(e1, e2);
-								p.sendMessage("•Í•Û•Ø§À¿Æ∏˘§∑§ﬁ§∑§ø:±¶•Ø•Í•√•Ø¡™¬Ú§¨•π•§•√•¡");
-								return false;
-								// e1 = output e2 = input
-							} else if (((e1.getLinkType().equals(LinkType.INPUT)
-									|| e1.getLinkType().equals(LinkType.OUT_IN))
-									&& e2.getLinkType().equals(LinkType.OUTPUT))
-									|| ((e2.getLinkType().equals(LinkType.OUTPUT)
-											|| e2.getLinkType().equals(LinkType.OUT_IN))
-											&& e1.getLinkType().equals(LinkType.INPUT))) {
-								// e1 = input e2 = output
-								editor.Link(e2, e1);
-								p.sendMessage("•Í•Û•Ø§À¿Æ∏˘§∑§ﬁ§∑§ø:∫∏•Ø•Í•√•Ø¡™¬Ú§¨•π•§•√•¡");
-								return false;
-							}
-
-							p.sendMessage("≤ø§È§´§Œ•®•È°º§«•Í•Û•Ø§Àº∫«‘§∑§ﬁ§∑§ø");
-
-
-						} else {
-							p.sendMessage("•∆•π•»¡ı√÷§¨¡™¬Ú§µ§Ï§∆§§§ﬁ§ª§Û");
-						}
-
-					} else {
-						p.sendMessage("¡™¬Ú»œ∞œ§Ú≥ŒƒÍ§∑§∆§Ø§¿§µ§§");
-					}
-
-				}
-				return false;
-
-			}
-
-		}, "±¶/∫∏•Ø•Í•√•Ø§«¡™¬Ú§∑§ø•∆•π•»¡ı√÷∆±ªŒ§Ú", "•Í•Û•Ø§µ§ª§ﬁ§π°£", "∆˛Ω–Œœ¥ÿ∑∏§¨º´∆∞∏°Ω–§«§≠§ §´§√§øæÏπÁ", "±¶•Ø•Í•√•Ø¡™¬Ú§∑§ø¡ı√÷§ÚΩ–Œœ§»§∑§∆»Ω√«§∑§ﬁ§π"));
-
-	}
-
-}
+/*     */ package com.murabi10.portalgunreloaded.chambereditor;
+/*     */ 
+/*     */ import com.murabi10.portalgunreloaded.BlockData;
+/*     */ import com.murabi10.portalgunreloaded.PortalGun;
+/*     */ import com.murabi10.portalgunreloaded.gui.Button;
+/*     */ import com.murabi10.portalgunreloaded.gui.GUI;
+/*     */ import com.murabi10.portalgunreloaded.gui.GUIFunction;
+/*     */ import com.murabi10.portalgunreloaded.testingelement.LinkType;
+/*     */ import com.murabi10.portalgunreloaded.testingelement.TestingElement;
+/*     */ import com.murabi10.portalgunreloaded.testingelement.area.StartPoint;
+/*     */ import org.bukkit.Location;
+/*     */ import org.bukkit.Material;
+/*     */ import org.bukkit.block.Block;
+/*     */ import org.bukkit.entity.Player;
+/*     */ import org.bukkit.event.inventory.ClickType;
+/*     */ 
+/*     */ public class FixturePlaceGUI
+/*     */   extends GUI
+/*     */ {
+/*     */   public void init()
+/*     */   {
+/*  22 */     setMenuName("„Ç¢„ÇØ„Ç∑„Éß„É≥„ÇíÈÅ∏„Çì„Åß„Åè„Å†„Åï„ÅÑ");
+/*  23 */     setSize(2);
+/*     */     
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*     */ 
+/*  37 */     addbutton(new Button(Material.DIAMOND_BLOCK, 1, (short)0, "„Çπ„Çø„Éº„ÉàÂú∞ÁÇπ„ÇíË®≠ÂÆö", 0, new GUIFunction()
+/*     */     {
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/*  41 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/*  43 */         if (editor != null)
+/*     */         {
+/*  45 */           StartPoint start = new StartPoint(editor.getOrigin(), editor.getX(p.getLocation()), 
+/*  46 */             editor.getY(p.getLocation()), editor.getZ(p.getLocation()));
+/*     */           
+/*  48 */           editor.AddTestElement(start);
+/*     */           
+/*  50 */           start.initRunnable();
+/*     */         }
+/*     */         
+/*  53 */         return true; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/*  57 */       "„Çπ„Çø„Éº„ÉàÂú∞ÁÇπ„Çí‰ªäÁ´ã„Å£„Å¶„ÅÑ„ÇãÂ†¥ÊâÄ„Å´", "Ë®≠ÂÆö„Åó„Åæ„Åô„ÄÇ", "„Çπ„Çø„Éº„ÉàÂú∞ÁÇπ„ÅåÂüã„Åæ„Å£„Å¶„ÅÑ„Çã„Å®„ÉÜ„Çπ„Éà„ÅåÈñãÂßã„Åß„Åç„Åæ„Åõ„Çì" }));
+/*     */     
+/*  59 */     addbutton(new Button(Material.CONCRETE, 1, (short)7, "ÁôΩ„ÅÑÂ£Å„ÇíÈªí„Åè„Åô„Çã", 1, new GUIFunction()
+/*     */     {
+/*     */ 
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/*  64 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/*  66 */         if ((editor != null) && (editor.isCuboid()))
+/*     */         {
+/*  68 */           int minx = Math.min(editor.getPos1().getBlockX(), editor.getPos2().getBlockX());
+/*  69 */           int miny = Math.min(editor.getPos1().getBlockY(), editor.getPos2().getBlockY());
+/*  70 */           int minz = Math.min(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
+/*  71 */           int maxx = Math.max(editor.getPos1().getBlockX(), editor.getPos2().getBlockX());
+/*  72 */           int maxy = Math.max(editor.getPos1().getBlockY(), editor.getPos2().getBlockY());
+/*  73 */           int maxz = Math.max(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
+/*     */           
+/*  75 */           for (int x = minx; x < maxx + 1; x++) {
+/*  76 */             for (int y = miny; y < maxy + 1; y++) {
+/*  77 */               for (int z = minz; z < maxz + 1; z++)
+/*     */               {
+/*  79 */                 Block b = new Location(editor.getOrigin().getWorld(), x, y, z).getBlock();
+/*     */                 
+/*  81 */                 if (b.getType().equals(Material.CONCRETE)) {
+/*  82 */                   b.setType(PortalGun.BLACK_PANEL.getMaterial());
+/*  83 */                   b.setData(PortalGun.BLACK_PANEL.GetData());
+/*     */                 }
+/*     */               }
+/*     */             }
+/*     */           }
+/*     */         }
+/*     */         
+/*  90 */         return true; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/*  94 */       "ÈÅ∏ÊäûÁØÑÂõ≤„ÅÆÁôΩ„ÅÑÂ£Å„ÇíÈªí„Åè„Åó„Åæ„Åô„ÄÇ", "Èªí„ÅÑÂ£Å„Å´„ÅØ„Éù„Éº„Çø„É´„ÅåÊâì„Å¶„Åæ„Åõ„Çì„ÄÇ" }));
+/*     */     
+/*  96 */     addbutton(new Button(Material.CONCRETE, 1, (short)0, "Èªí„ÅÑÂ£Å„ÇíÁôΩ„Åè„Åô„Çã", 2, new GUIFunction()
+/*     */     {
+/*     */ 
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 101 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 103 */         if ((editor != null) && (editor.isCuboid()))
+/*     */         {
+/* 105 */           int minx = Math.min(editor.getPos1().getBlockX(), editor.getPos2().getBlockX());
+/* 106 */           int miny = Math.min(editor.getPos1().getBlockY(), editor.getPos2().getBlockY());
+/* 107 */           int minz = Math.min(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
+/* 108 */           int maxx = Math.max(editor.getPos1().getBlockX(), editor.getPos2().getBlockX());
+/* 109 */           int maxy = Math.max(editor.getPos1().getBlockY(), editor.getPos2().getBlockY());
+/* 110 */           int maxz = Math.max(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
+/*     */           
+/* 112 */           for (int x = minx; x < maxx + 1; x++) {
+/* 113 */             for (int y = miny; y < maxy + 1; y++) {
+/* 114 */               for (int z = minz; z < maxz + 1; z++)
+/*     */               {
+/* 116 */                 Block b = new Location(editor.getOrigin().getWorld(), x, y, z).getBlock();
+/*     */                 
+/* 118 */                 if (b.getType().equals(Material.CONCRETE)) {
+/* 119 */                   b.setType(PortalGun.WHITE_PANEL.getMaterial());
+/* 120 */                   b.setData(PortalGun.WHITE_PANEL.GetData());
+/*     */                 }
+/*     */               }
+/*     */             }
+/*     */           }
+/*     */         }
+/*     */         
+/* 127 */         return true; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 131 */       "ÈÅ∏ÊäûÁØÑÂõ≤„ÅÆÈªí„ÅÑÂ£Å„ÇíÁôΩ„Åè„Åó„Åæ„Åô„ÄÇ", "ÁôΩ„ÅÑÂ£Å„Å´„ÅØ„Éù„Éº„Çø„É´„ÅåÊâì„Å¶„Åæ„Åô„ÄÇ" }));
+/*     */     
+/* 133 */     addbutton(new Button(Material.BARRIER, 1, (short)0, "ÈÅ∏ÊäûÁØÑÂõ≤„ÇíËß£Èô§", 3, new GUIFunction()
+/*     */     {
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 137 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 139 */         if (editor != null) {
+/* 140 */           editor.clearPos();
+/*     */         }
+/* 142 */         return true; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 146 */       "ÈÅ∏ÊäûÁØÑÂõ≤„ÇíËß£Èô§„Åó„Åæ„Åô„ÄÇ" }));
+/*     */     
+/* 148 */     addbutton(new Button(Material.REDSTONE_TORCH_ON, 1, (short)0, "„ÉÜ„Çπ„ÉàË£ÖÁΩÆ„ÇíË®≠ÁΩÆ„Åô„Çã", 4, new GUIFunction()
+/*     */     {
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 152 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 154 */         if (editor != null) {
+/* 155 */           p.closeInventory();
+/* 156 */           PortalGun.gimmicks.openGUI(p);
+/*     */         }
+/* 158 */         return false; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 162 */       "„É¨„Éº„Ç∂„Éº„ÇÑÁâ©Ë≥™Ê∂àÂéª„Ç∞„É™„ÉÉ„Éâ„Å™„Å©„ÅÆ", "„ÉÜ„Çπ„ÉàÁî®„ÇÆ„Éü„ÉÉ„ÇØ„ÇíË®≠ÁΩÆ„Åó„Åæ„Åô„ÄÇ" }));
+/*     */     
+/* 164 */     addbutton(new Button(Material.BARRIER, 1, (short)0, "ÈÅ∏ÊäûÁØÑÂõ≤ÂÜÖ„ÇØ„É™„Ç¢", 5, new GUIFunction()
+/*     */     {
+/*     */ 
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 169 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 171 */         if ((editor != null) && (editor.isCuboid()))
+/*     */         {
+/* 173 */           int minx = Math.min(editor.getPos1().getBlockX(), editor.getPos2().getBlockX());
+/* 174 */           int miny = Math.min(editor.getPos1().getBlockY(), editor.getPos2().getBlockY());
+/* 175 */           int minz = Math.min(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
+/* 176 */           int maxx = Math.max(editor.getPos1().getBlockX(), editor.getPos2().getBlockX());
+/* 177 */           int maxy = Math.max(editor.getPos1().getBlockY(), editor.getPos2().getBlockY());
+/* 178 */           int maxz = Math.max(editor.getPos1().getBlockZ(), editor.getPos2().getBlockZ());
+/*     */           
+/* 180 */           for (int x = minx; x < maxx + 1; x++) {
+/* 181 */             for (int y = miny; y < maxy + 1; y++) {
+/* 182 */               for (int z = minz; z < maxz + 1; z++)
+/*     */               {
+/* 184 */                 Block b = new Location(editor.getOrigin().getWorld(), x, y, z).getBlock();
+/*     */                 
+/* 186 */                 if (editor.getElement(b.getLocation()) != null) {
+/* 187 */                   editor.RemoveElement(b.getLocation());
+/*     */                 }
+/* 189 */                 if (((!b.isLiquid()) && (!b.isEmpty())) || (b.getType().equals(Material.CONCRETE))) {
+/* 190 */                   b.setType(PortalGun.BLACK_PANEL.getMaterial());
+/* 191 */                   b.setData(PortalGun.BLACK_PANEL.GetData());
+/*     */                 }
+/*     */               }
+/*     */             }
+/*     */           }
+/*     */         }
+/*     */         
+/* 198 */         return true; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 202 */       "ÈÅ∏ÊäûÁØÑÂõ≤ÂÜÖ„ÅÆÁôΩ/ÈªíÂ£Å‰ª•Â§ñ„ÅÆË®≠ÁΩÆÁâ©", "Ôºà„ÉÜ„Çπ„ÉàË£ÖÁΩÆ„ÇÑÂÖâÊ∫ê„ÇÑ„Åù„ÅÆ‰ªñ„Éñ„É≠„ÉÉ„ÇØÔºâ„ÇíÈô§Âéª„Åó„ÄÅ", "‰ª£„Çè„Çä„Å´Èªí„ÅÑÂ£Å„ÇíË®≠ÁΩÆ„Åó„Åæ„Åô„ÄÇ" }));
+/*     */     
+/* 204 */     addbutton(new Button(Material.STONE, 1, (short)0, "„Çª„Éº„Éñ", 6, new GUIFunction()
+/*     */     {
+/*     */ 
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 209 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 211 */         if (editor != null) {
+/* 212 */           editor.SaveToFile();
+/*     */         }
+/* 214 */         return true; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 218 */       "„ÉÜ„Çπ„Éà„ÉÅ„Çß„É≥„Éê„Éº„Çí‰øùÂ≠ò„Åó„Åæ„Åô„ÄÇ" }));
+/*     */     
+/* 220 */     addbutton(new Button(Material.STONE, 1, (short)0, "„Çª„Éº„Éñ„Åó„Å¶ÁµÇ‰∫Ü", 7, new GUIFunction()
+/*     */     {
+/*     */ 
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 225 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 227 */         if (editor != null) {
+/* 228 */           editor.Exit();
+/*     */         }
+/* 230 */         return false; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 234 */       "„ÉÜ„Çπ„Éà„ÉÅ„Çß„É≥„Éê„Éº„Çí‰øùÂ≠ò„Åó„Å¶„Åã„Çâ", "ÁµÇ‰∫Ü„Åó„Åæ„Åô„ÄÇ" }));
+/*     */     
+/* 236 */     addbutton(new Button(Material.IRON_FENCE, 1, (short)0, "„É™„É≥„ÇØ", 9, new GUIFunction()
+/*     */     {
+/*     */ 
+/*     */       public boolean click(Player p, ClickType type)
+/*     */       {
+/* 241 */         TestChamberEditor editor = TestChamberEditor.getEditor(p);
+/*     */         
+/* 243 */         if (editor != null)
+/*     */         {
+/* 245 */           if ((!editor.Pos1Empt()) && (!editor.Pos2Empt()))
+/*     */           {
+/* 247 */             TestingElement e1 = editor.getElement(editor.getPos1());
+/* 248 */             TestingElement e2 = editor.getElement(editor.getPos2());
+/*     */             
+/* 250 */             if ((e1 != null) && (e2 != null))
+/*     */             {
+/* 252 */               if (e1.equals(e2)) {
+/* 253 */                 p.sendMessage("ÂÖ•Âá∫Âäõ„ÅåÂêå„ÅòË£ÖÁΩÆ„Åß„Åô");
+/* 254 */                 return false;
+/*     */               }
+/*     */               
+/* 257 */               if (e1.getLinkType().equals(LinkType.DNC)) {
+/* 258 */                 p.sendMessage("Âè≥„ÇØ„É™„ÉÉ„ÇØÈÅ∏Êäû„Åó„ÅüË£ÖÁΩÆ„ÅØÂÖ•Âá∫Âäõ‰∏çÂèØËÉΩ„Åß„Åô");
+/* 259 */                 return false;
+/*     */               }
+/*     */               
+/* 262 */               if (e2.getLinkType().equals(LinkType.DNC)) {
+/* 263 */                 p.sendMessage("Â∑¶„ÇØ„É™„ÉÉ„ÇØÈÅ∏Êäû„Åó„ÅüË£ÖÁΩÆ„ÅØÂÖ•Âá∫Âäõ‰∏çÂèØËÉΩ„Åß„Åô");
+/* 264 */                 return false;
+/*     */               }
+/*     */               
+/* 267 */               if ((e1.getLinkType().equals(LinkType.OUTPUT)) && (e2.getLinkType().equals(LinkType.OUTPUT))) {
+/* 268 */                 p.sendMessage("Âá∫ÂäõË£ÖÁΩÆÂêåÂ£´„ÅØ„É™„É≥„ÇØ„Åß„Åç„Åæ„Åõ„Çì");
+/* 269 */                 return false; }
+/* 270 */               if ((e1.getLinkType().equals(LinkType.INPUT)) && 
+/* 271 */                 (e2.getLinkType().equals(LinkType.INPUT))) {
+/* 272 */                 p.sendMessage("ÂÖ•ÂäõË£ÖÁΩÆÂêåÂ£´„ÅØ„É™„É≥„ÇØ„Åß„Åç„Åæ„Åõ„Çì");
+/* 273 */                 return false;
+/*     */               }
+/*     */               
+/* 276 */               if (((e1.getLinkType().equals(LinkType.OUT_IN)) && (e2.getLinkType().equals(LinkType.OUT_IN))) || (
+/* 277 */                 ((!e1.getLinkType().equals(LinkType.OUTPUT)) && 
+/* 278 */                 (!e1.getLinkType().equals(LinkType.OUT_IN))) || (
+/* 279 */                 (e2.getLinkType().equals(LinkType.INPUT)) || (
+/* 280 */                 ((e2.getLinkType().equals(LinkType.INPUT)) || 
+/* 281 */                 (e2.getLinkType().equals(LinkType.OUT_IN))) && 
+/* 282 */                 (e1.getLinkType().equals(LinkType.OUTPUT)))))) {
+/* 283 */                 if ((e1.getLinkType().equals(LinkType.OUT_IN)) && (e2.getLinkType().equals(LinkType.OUT_IN))) {
+/* 284 */                   p.sendMessage("ÂÖ•Âá∫ÂäõÈñ¢‰øÇ„ÅåËá™ÂãïÊ§úÂá∫„Åß„Åç„Å™„Åã„Å£„Åü„ÅÆ„ÅßÂè≥„ÇØ„É™„ÉÉ„ÇØÈÅ∏Êäû„Åó„ÅüË£ÖÁΩÆ„ÇíÂá∫Âäõ„Å®„Åó„Åæ„Åó„Åü");
+/*     */                 }
+/* 286 */                 editor.Link(e1, e2);
+/* 287 */                 p.sendMessage("„É™„É≥„ÇØ„Å´ÊàêÂäü„Åó„Åæ„Åó„Åü:Âè≥„ÇØ„É™„ÉÉ„ÇØÈÅ∏Êäû„Åå„Çπ„Ç§„ÉÉ„ÉÅ");
+/* 288 */                 return false;
+/*     */               }
+/* 290 */               if (((!e1.getLinkType().equals(LinkType.INPUT)) && 
+/* 291 */                 (!e1.getLinkType().equals(LinkType.OUT_IN))) || (
+/* 292 */                 (e2.getLinkType().equals(LinkType.OUTPUT)) || (
+/* 293 */                 ((e2.getLinkType().equals(LinkType.OUTPUT)) || 
+/* 294 */                 (e2.getLinkType().equals(LinkType.OUT_IN))) && 
+/* 295 */                 (e1.getLinkType().equals(LinkType.INPUT)))))
+/*     */               {
+/* 297 */                 editor.Link(e2, e1);
+/* 298 */                 p.sendMessage("„É™„É≥„ÇØ„Å´ÊàêÂäü„Åó„Åæ„Åó„Åü:Â∑¶„ÇØ„É™„ÉÉ„ÇØÈÅ∏Êäû„Åå„Çπ„Ç§„ÉÉ„ÉÅ");
+/* 299 */                 return false;
+/*     */               }
+/*     */               
+/* 302 */               p.sendMessage("‰Ωï„Çâ„Åã„ÅÆ„Ç®„É©„Éº„Åß„É™„É≥„ÇØ„Å´Â§±Êïó„Åó„Åæ„Åó„Åü");
+/*     */             }
+/*     */             else
+/*     */             {
+/* 306 */               p.sendMessage("„ÉÜ„Çπ„ÉàË£ÖÁΩÆ„ÅåÈÅ∏Êäû„Åï„Çå„Å¶„ÅÑ„Åæ„Åõ„Çì");
+/*     */             }
+/*     */           }
+/*     */           else {
+/* 310 */             p.sendMessage("ÈÅ∏ÊäûÁØÑÂõ≤„ÇíÁ¢∫ÂÆö„Åó„Å¶„Åè„Å†„Åï„ÅÑ");
+/*     */           }
+/*     */         }
+/*     */         
+/* 314 */         return false; } }, new String[] {
+/*     */     
+/*     */ 
+/*     */ 
+/* 318 */       "Âè≥/Â∑¶„ÇØ„É™„ÉÉ„ÇØ„ÅßÈÅ∏Êäû„Åó„Åü„ÉÜ„Çπ„ÉàË£ÖÁΩÆÂêåÂ£´„Çí", "„É™„É≥„ÇØ„Åï„Åõ„Åæ„Åô„ÄÇ", "ÂÖ•Âá∫ÂäõÈñ¢‰øÇ„ÅåËá™ÂãïÊ§úÂá∫„Åß„Åç„Å™„Åã„Å£„ÅüÂ†¥Âêà", "Âè≥„ÇØ„É™„ÉÉ„ÇØÈÅ∏Êäû„Åó„ÅüË£ÖÁΩÆ„ÇíÂá∫Âäõ„Å®„Åó„Å¶Âà§Êñ≠„Åó„Åæ„Åô" }));
+/*     */   }
+/*     */ }
+
+
+/* Location:              C:\Users\2SC1815\Desktop\PortalGunReloaded-1.7.2.jar!\com\murabi10\portalgunreloaded\chambereditor\FixturePlaceGUI.class
+ * Java compiler version: 7 (51.0)
+ * JD-Core Version:       0.7.1
+ */

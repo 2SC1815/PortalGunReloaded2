@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import com.murabi10.portalgunreloaded.portalgun.Portal;
-import com.murabi10.portalgunreloaded.portalgun.PortalDevice;
 
 public class Methods {
+	private static final double PI = 3.141592653D;
+	private static final double sin0 = 0.02741213D;
+	private static final double cos0 = 0.99962421D;
 
-	public static ArrayList<Entity> getEntity(Location loc) {
-		ArrayList<Entity> entities = new ArrayList<Entity>();
-		for (Entity ent : loc.getWorld().getNearbyEntities(loc, 2, 2, 2)) {
+	public static ArrayList<org.bukkit.entity.Entity> getEntity(Location loc) {
+		ArrayList<org.bukkit.entity.Entity> entities = new ArrayList();
+		for (org.bukkit.entity.Entity ent : loc.getWorld().getNearbyEntities(loc, 2.0D, 2.0D, 2.0D)) {
 			if (LocationEquals(ent.getLocation(), loc)) {
 				entities.add(ent);
 			}
@@ -26,14 +26,14 @@ public class Methods {
 
 	public static boolean LocationEquals(Location loc1, Location loc2) {
 		return (floor(loc1.getBlockX()) == floor(loc2.getBlockX())) &&
-		(floor(loc1.getBlockY()) == floor(loc2.getBlockY())) &&
-		(floor(loc1.getBlockZ()) == floor(loc2.getBlockZ()));
+				(floor(loc1.getBlockY()) == floor(loc2.getBlockY())) &&
+				(floor(loc1.getBlockZ()) == floor(loc2.getBlockZ()));
 	}
 
 	public static Location LocationFloor(Location loc) {
 		Location loc_ = loc.clone();
-		loc_.setYaw(0F);
-		loc_.setPitch(0F);
+		loc_.setYaw(0.0F);
+		loc_.setPitch(0.0F);
 		loc_.setX(floor(loc_.getBlockX()));
 		loc_.setY(floor(loc_.getBlockY()));
 		loc_.setZ(floor(loc_.getBlockZ()));
@@ -46,9 +46,9 @@ public class Methods {
 
 	public static Location BlockFaceFormat(BlockFace launchD, BlockFace bf, Location loc) {
 		Location rtn = loc.clone();
-		float yaw = 0;
+		float yaw = 0.0F;
 		if (launchD != null) {
-			if (!launchD.equals(BlockFace.DOWN) || !launchD.equals(BlockFace.UP)) {
+			if ((!launchD.equals(BlockFace.DOWN)) || (!launchD.equals(BlockFace.UP))) {
 				yaw = BlockFaceToYaw(launchD);
 			} else {
 				yaw = BlockFaceToYaw(bf);
@@ -58,25 +58,19 @@ public class Methods {
 		return rtn;
 	}
 
-	private static final double PI = 3.141592653;
-	private static final double sin0 = 0.02741213;
-	private static final double cos0 = 0.99962421;
-
 	public static Vector DirectionToVector(float dpitch, float dyaw) {
-		double pitch = ((dpitch + 90) * PI) / 180;
-		double yaw = ((dyaw + 90) * PI) / 180;
+		double pitch = (dpitch + 90.0F) * 3.141592653D / 180.0D;
+		double yaw = (dyaw + 90.0F) * 3.141592653D / 180.0D;
 		return new Vector(Math.sin(pitch) * Math.cos(yaw),
 				Math.sin(pitch) * Math.sin(yaw), Math.cos(pitch)).normalize();
 	}
 
 	public static Vector YawToVector(double yaw) {
-		double dyaw = ((yaw + 90) * PI) / 180;
-		return new Vector(sin0 * Math.cos(dyaw),
-				sin0 * Math.sin(dyaw), cos0).normalize();
-
+		double dyaw = (yaw + 90.0D) * 3.141592653D / 180.0D;
+		return new Vector(0.02741213D * Math.cos(dyaw),
+				0.02741213D * Math.sin(dyaw), 0.99962421D).normalize();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean isSuitable(Portal portal, boolean overlapSearch) {
 
 		ArrayList<Location> air = new ArrayList<Location>();
@@ -88,14 +82,16 @@ public class Methods {
 		case SOUTH:
 		case WEST:
 		case NORTH:
-			if (overlapSearch && (getPortal(portal.getRepresentativeLocation()) != null || getPortal(portal.getRepresentativeLocation().clone().add(0, 1, 0)) != null)) {
+			if (overlapSearch && (getPortal(portal.getRepresentativeLocation()) != null
+					|| getPortal(portal.getRepresentativeLocation().clone().add(0, 1, 0)) != null)) {
 				return false;
 			}
 			air.add(portal.getRepresentativeLocation());
-			air.add(portal.getRepresentativeLocation().clone().add(0,1,0));
-			Location Long = portal.getRepresentativeLocation().getBlock().getRelative(portal.getLaunchDirection().getOppositeFace()).getLocation();
+			air.add(portal.getRepresentativeLocation().clone().add(0, 1, 0));
+			Location Long = portal.getRepresentativeLocation().getBlock()
+					.getRelative(portal.getLaunchDirection().getOppositeFace()).getLocation();
 			block.add(Long);
-			block.add(Long.clone().add(0,1,0));
+			block.add(Long.clone().add(0, 1, 0));
 			break;
 		case DOWN:
 			for (Location loc : portal.getLocations()) {
@@ -127,7 +123,8 @@ public class Methods {
 			ok = false;
 
 			for (BlockData blk : PortalGun.PortalConductors) {
-				if (loc.getBlock().getType().equals(blk.getMaterial()) && (blk.GetData() == -1 || blk.GetData() == loc.getBlock().getData()) ) {
+				if (loc.getBlock().getType().equals(blk.getMaterial())
+						&& (blk.GetData() == -1 || blk.GetData() == loc.getBlock().getData())) {
 					ok = true;
 					break;
 				}
@@ -146,21 +143,21 @@ public class Methods {
 	public static BlockFace YawToBlockFace_(float Yaw) {
 		BlockFace dir = null;
 		float y = Yaw;
-		if (y < 0) {
-			y += 360;
+		if (y < 0.0F) {
+			y += 360.0F;
 		}
-		y %= 360;
-		int i = (int) ((y + 8) / 22.5);
+		y %= 360.0F;
+		int i = (int) ((y + 8.0F) / 22.5D);
 
-		if (i <= 3 && i >= 6)
+		if ((i <= 3) && (i >= 6)) {
 			dir = BlockFace.WEST;
-		else if (i <= 7 && i >= 10)
+		} else if ((i <= 7) && (i >= 10)) {
 			dir = BlockFace.NORTH;
-		else if (i <= 11 && i >= 14)
+		} else if ((i <= 11) && (i >= 14)) {
 			dir = BlockFace.EAST;
-		else if ((i <= 0 && i >= 2)||i<=15)
+		} else if (((i <= 0) && (i >= 2)) || (i <= 15)) {
 			dir = BlockFace.SOUTH;
-		else {
+		} else {
 			dir = BlockFace.SOUTH;
 			System.out.println("WOOOOOOOOOOOOOOOO!!!!");
 		}
@@ -171,44 +168,44 @@ public class Methods {
 	public static BlockFace YawToBlockFace(float Yaw) {
 		BlockFace dir = null;
 		float y = Yaw;
-		if (y < 0) {
-			y += 360;
+		if (y < 0.0F) {
+			y += 360.0F;
 		}
-		y %= 360;
-		int i = (int) ((y + 8) / 22.5);
-		if (i == 0)
+		y %= 360.0F;
+		int i = (int) ((y + 8.0F) / 22.5D);
+		if (i == 0) {
 			dir = BlockFace.SOUTH;
-		else if (i == 1)
+		} else if (i == 1) {
 			dir = BlockFace.SOUTH;
-		else if (i == 2)
+		} else if (i == 2) {
 			dir = BlockFace.SOUTH;
-		else if (i == 3)
+		} else if (i == 3) {
 			dir = BlockFace.WEST;
-		else if (i == 4)
+		} else if (i == 4) {
 			dir = BlockFace.WEST;
-		else if (i == 5)
+		} else if (i == 5) {
 			dir = BlockFace.WEST;
-		else if (i == 6)
-			dir = BlockFace.WEST;// west
-		else if (i == 7)
+		} else if (i == 6) {
+			dir = BlockFace.WEST;
+		} else if (i == 7) {
 			dir = BlockFace.NORTH;
-		else if (i == 8)
+		} else if (i == 8) {
 			dir = BlockFace.NORTH;
-		else if (i == 9)
+		} else if (i == 9) {
 			dir = BlockFace.NORTH;
-		else if (i == 10)
-			dir = BlockFace.NORTH;// north
-		else if (i == 11)
+		} else if (i == 10) {
+			dir = BlockFace.NORTH;
+		} else if (i == 11) {
 			dir = BlockFace.EAST;
-		else if (i == 12)
+		} else if (i == 12) {
 			dir = BlockFace.EAST;
-		else if (i == 13)
+		} else if (i == 13) {
 			dir = BlockFace.EAST;
-		else if (i == 14)
-			dir = BlockFace.EAST;// east
-		else if (i == 15)
-			dir = BlockFace.SOUTH;// south
-		else {
+		} else if (i == 14) {
+			dir = BlockFace.EAST;
+		} else if (i == 15) {
+			dir = BlockFace.SOUTH;
+		} else {
 			dir = BlockFace.SOUTH;
 		}
 		return dir;
@@ -216,41 +213,40 @@ public class Methods {
 
 	public static Location LocationNormalize(Location loc) {
 		if (loc != null)
-			return loc.add(0.5, 0, 0.5);
+			return loc.add(0.5D, 0.0D, 0.5D);
 		return null;
 	}
 
 	public static Vector BlockFaceToVector(BlockFace DestFace, double acc) {
-		Vector rtn = new Vector(0D, 0D, 0D);
-			switch (DestFace) {
-			case SOUTH:
-				rtn.setZ(acc);
-				break;
-			case WEST:
-				rtn.setX(-acc);
-				break;
-			case NORTH:
-				rtn.setZ(-acc);
-				break;
-			case EAST:
-				rtn.setX(acc);
-				break;
-			case UP:
-				rtn.setY(acc);
-				break;
-			case DOWN:
-				rtn.setY(-acc);
-				break;
-			default:
-				break;
-			}
+		Vector rtn = new Vector(0.0D, 0.0D, 0.0D);
+		switch (DestFace) {
+		case EAST_NORTH_EAST:
+			rtn.setZ(acc);
+			break;
+		case EAST_SOUTH_EAST:
+			rtn.setX(-acc);
+			break;
+		case DOWN:
+			rtn.setZ(-acc);
+			break;
+		case EAST:
+			rtn.setX(acc);
+			break;
+		case NORTH:
+			rtn.setY(acc);
+			break;
+		case NORTH_EAST:
+			rtn.setY(-acc);
+			break;
+		}
+
 		return rtn;
 	}
 
 	public static Portal getPortal(Location loc) {
 		Portal rtn = null;
-		for (PortalDevice gun : PortalDevice.getDevices()) {
-
+		for (com.murabi10.portalgunreloaded.portalgun.PortalDevice gun : com.murabi10.portalgunreloaded.portalgun.PortalDevice
+				.getDevices()) {
 			Portal BP = gun.getBluePortal();
 			Portal OP = gun.getOrangePortal();
 
@@ -264,57 +260,50 @@ public class Methods {
 
 			if (OP != null) {
 				for (Location locs : OP.getLocations()) {
-					if (LocationEquals(locs, loc))
+					if (LocationEquals(locs, loc)) {
 						rtn = OP;
+					}
 				}
-
 			}
 		}
 
 		return rtn;
-
 	}
 
 	public static Portal getPortal(Location loc, boolean SpecialSearch) {
 		if (!SpecialSearch) {
 			return getPortal(loc);
-		} else {
-			Portal p = getPortal(loc);
-			if (p != null) {
-				return p;
-			} else {
-				p = getPortal(loc.clone().add(0, 1, 0));
-				if (p != null && p.getLaunchDirection().equals(BlockFace.DOWN)) {
-					return p;
-				} else {
-					return null;
-				}
-			}
 		}
+		Portal p = getPortal(loc);
+		if (p != null) {
+			return p;
+		}
+		p = getPortal(loc.clone().add(0.0D, 1.0D, 0.0D));
+		if ((p != null) && (p.getLaunchDirection().equals(BlockFace.DOWN))) {
+			return p;
+		}
+		return null;
 	}
 
 	public static double VectorToAcc(Vector dir, boolean ignoreVertical) {
-			if (ignoreVertical) {
-
-				return Math.sqrt(powTwo(dir.getX()) + powTwo(dir.getZ()));
-			} else {
-				return Math.sqrt(powTwo(dir.getX()) + powTwo(dir.getY())
-				+ powTwo(dir.getZ()));
-			}
+		if (ignoreVertical) {
+			return Math.sqrt(powTwo(dir.getX()) + powTwo(dir.getZ()));
+		}
+		return Math.sqrt(powTwo(dir.getX()) + powTwo(dir.getY()) +
+				powTwo(dir.getZ()));
 	}
 
 	private static double powTwo(double x) {
-		return x*x;
+		return x * x;
 	}
 
 	public static void spawnParticle(Location loc, byte R, byte G, byte B) {
-
-		loc.getWorld().spawnParticle(Particle.REDSTONE, loc.getX(), loc.getY(), loc.getZ(), 0,
-				((double) R / 255), ((double) G / 255), ((double) B / 255), 1d);
+		loc.getWorld().spawnParticle(org.bukkit.Particle.REDSTONE, loc.getX(), loc.getY(), loc.getZ(), 0,
+				R / 255.0D, G / 255.0D, B / 255.0D, 1.0D);
 	}
 
 	public static boolean isTransparent(Location loc) {
-		for (Material mat : PortalGun.transparentMaterials) {
+		for (org.bukkit.Material mat : PortalGun.transparentMaterials) {
 			if (loc.getBlock().getType().equals(mat)) {
 				return true;
 			}
@@ -335,7 +324,6 @@ public class Methods {
 		}
 		return 0;
 	}
-
 
 	public static float BlockFaceToYaw(BlockFace bf) {
 		if (bf != null) {
@@ -365,6 +353,9 @@ public class Methods {
 	public static int getZ(Location origin, Location target) {
 		return target.getBlockZ() - origin.getBlockZ();
 	}
-
-
 }
+
+/* Location:              C:\Users\2SC1815\Desktop\PortalGunReloaded-1.7.2.jar!\com\murabi10\portalgunreloaded\Methods.class
+ * Java compiler version: 7 (51.0)
+ * JD-Core Version:       0.7.1
+ */

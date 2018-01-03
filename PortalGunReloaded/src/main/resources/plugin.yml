@@ -1,6 +1,6 @@
-name: PortalGunReloaded
-main: com.murabi10.portalgunreloaded.PortalGun
-version: 1.1
+name: PortalGunReloaded2
+main: com.murabi10.portalgunreloaded2.PortalGun
+version: 1.7.3
 softdepend: [Multiverse-Core, Multiverse-Portals]
 commands:
    debug:

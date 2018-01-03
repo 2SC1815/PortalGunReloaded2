@@ -1,81 +1,71 @@
-/*    */ package com.murabi10.portalgunreloaded.testingelement.fixture;
-/*    */ 
-/*    */ import com.murabi10.portalgunreloaded.testingelement.ElementType;
-/*    */ import com.murabi10.portalgunreloaded.testingelement.TestingElement;
-/*    */ import java.util.ArrayList;
-/*    */ import org.bukkit.Location;
-/*    */ import org.bukkit.Material;
-/*    */ import org.bukkit.block.Block;
-/*    */ import org.bukkit.block.BlockFace;
-/*    */ 
-/*    */ public class Speaker extends TestingElement
-/*    */ {
-/* 13 */   private transient boolean oldActivated = true;
-/* 14 */   transient int i = 0;
-/* 15 */   transient boolean activated = false;
-/* 16 */   private String message = "";
-/*    */   
-/*    */   public Speaker(Location OriginLoc, int x, int y, int z) {
-/* 19 */     super(OriginLoc, ElementType.SPEAKER, com.murabi10.portalgunreloaded.testingelement.LinkType.INPUT, BlockFace.SOUTH, x, y, z);
-/*    */   }
-/*    */   
-/*    */   public boolean check()
-/*    */   {
-/* 24 */     return true;
-/*    */   }
-/*    */   
-/*    */   protected void destroy()
-/*    */   {
-/* 29 */     getRelative1(this.OriginLocation).getBlock().setType(Material.AIR);
-/*    */   }
-/*    */   
-/*    */   protected void Run()
-/*    */   {
-/* 34 */     if (isEditMode()) {
-/* 35 */       this.activated = false;
-/*    */     }
-/*    */     
-/*    */ 
-/*    */ 
-/* 40 */     if (this.i >= 3)
-/*    */     {
-/* 42 */       getRelative1(this.OriginLocation).getBlock().setType(isEditMode() ? Material.JUKEBOX : Material.AIR);
-/*    */       
-/* 44 */       setInput(true);
-/* 45 */       if (Switches().size() != 0) {
-/* 46 */         for (TestingElement e : Switches()) {
-/* 47 */           if (!e.isOutput()) {
-/* 48 */             setInput(false);
-/* 49 */             break;
-/*    */           }
-/*    */         }
-/*    */       }
-/*    */       
-/* 54 */       if ((isInput() != this.oldActivated) && (isInput()))
-/*    */       {
-/* 56 */         getTargetPlayer().sendMessage("録音メッセージ： " + this.message);
-/*    */         
-/* 58 */         if (!isEditMode()) {
-/* 59 */           this.activated = true;
-/*    */         }
-/*    */       }
-/*    */       
-/*    */ 
-/* 64 */       this.oldActivated = isInput();
-/* 65 */       this.i = 0;
-/*    */     }
-/* 67 */     this.i += 1;
-/*    */   }
-/*    */   
-/*    */   public void setString(String message) {
-/* 71 */     this.message = message;
-/*    */   }
-/*    */   
-/*    */   public String getString() {
-/* 75 */     return this.message;
-/*    */   }
-/*    */ }
+package com.murabi10.portalgunreloaded.testingelement.fixture;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+
+import com.murabi10.portalgunreloaded.testingelement.ElementType;
+import com.murabi10.portalgunreloaded.testingelement.TestingElement;
+
+public class Speaker extends TestingElement {
+	private transient boolean oldActivated = true;
+	transient int i = 0;
+	transient boolean activated = false;
+	private String message = "";
+
+	public Speaker(Location OriginLoc, int x, int y, int z) {
+		super(OriginLoc, ElementType.SPEAKER, com.murabi10.portalgunreloaded.testingelement.LinkType.INPUT,
+				BlockFace.SOUTH, x, y, z);
+	}
+
+	public boolean check() {
+		return true;
+	}
+
+	protected void destroy() {
+		getRelative1(this.OriginLocation).getBlock().setType(Material.AIR);
+	}
+
+	protected void Run() {
+		if (isEditMode()) {
+			this.activated = false;
+		}
+
+		if (this.i >= 3) {
+			getRelative1(this.OriginLocation).getBlock().setType(isEditMode() ? Material.JUKEBOX : Material.AIR);
+
+			setInput(true);
+			if (Switches().size() != 0) {
+				for (TestingElement e : Switches()) {
+					if (!e.isOutput()) {
+						setInput(false);
+						break;
+					}
+				}
+			}
+
+			if ((isInput() != this.oldActivated) && (isInput())) {
+				getTargetPlayer().sendMessage("録音メッセージ： " + this.message);
+
+				if (!isEditMode()) {
+					this.activated = true;
+				}
+			}
+
+			this.oldActivated = isInput();
+			this.i = 0;
+		}
+		this.i += 1;
+	}
+
+	public void setString(String message) {
+		this.message = message;
+	}
+
+	public String getString() {
+		return this.message;
+	}
+}
 
 /* Location:              C:\Users\2SC1815\Desktop\PortalGunReloaded-1.7.2.jar!\com\murabi10\portalgunreloaded\testingelement\fixture\Speaker.class
  * Java compiler version: 7 (51.0)

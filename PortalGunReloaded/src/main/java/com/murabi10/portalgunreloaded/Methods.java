@@ -5,17 +5,15 @@ import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import com.murabi10.portalgunreloaded.portalgun.Portal;
 
 public class Methods {
-	private static final double PI = 3.141592653D;
-	private static final double sin0 = 0.02741213D;
-	private static final double cos0 = 0.99962421D;
 
 	public static ArrayList<org.bukkit.entity.Entity> getEntity(Location loc) {
-		ArrayList<org.bukkit.entity.Entity> entities = new ArrayList();
+		ArrayList<Entity> entities = new ArrayList<Entity>();
 		for (org.bukkit.entity.Entity ent : loc.getWorld().getNearbyEntities(loc, 2.0D, 2.0D, 2.0D)) {
 			if (LocationEquals(ent.getLocation(), loc)) {
 				entities.add(ent);
@@ -71,6 +69,7 @@ public class Methods {
 				0.02741213D * Math.sin(dyaw), 0.99962421D).normalize();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isSuitable(Portal portal, boolean overlapSearch) {
 
 		ArrayList<Location> air = new ArrayList<Location>();
@@ -237,6 +236,8 @@ public class Methods {
 			break;
 		case NORTH_EAST:
 			rtn.setY(-acc);
+			break;
+		default:
 			break;
 		}
 

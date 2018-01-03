@@ -3,27 +3,27 @@
 /*    */ import org.bukkit.Material;
 /*    */ import org.bukkit.block.BlockFace;
 
-/*    */ 
+/*    */
 /*    */ import com.murabi10.portalgunreloaded.testingelement.ElementType;
 /*    */ import com.murabi10.portalgunreloaded.testingelement.LinkType;
 /*    */ import com.murabi10.portalgunreloaded.testingelement.TestingElement;
-/*    */ 
+/*    */
 /*    */ public class RSInputInterface extends TestingElement
 /*    */ {
 /*    */   public RSInputInterface(Location OriginLoc, int x, int y, int z)
 /*    */   {
 /* 15 */     super(OriginLoc, ElementType.RSINPUT, LinkType.OUTPUT, BlockFace.SOUTH, x, y, z);
 /*    */   }
-/*    */   
+/*    */
 /*    */   public boolean check()
 /*    */   {
 /* 20 */     return true;
 /*    */   }
-/*    */   
-/*    */ 
+/*    */
+/*    */
 /*    */   protected void destroy() {}
-/*    */   
-/*    */ 
+/*    */
+/*    */
 /*    */   protected void Run()
 /*    */   {
 /* 29 */     getRelative1(this.OriginLocation).getBlock().setType(Material.IRON_BLOCK);

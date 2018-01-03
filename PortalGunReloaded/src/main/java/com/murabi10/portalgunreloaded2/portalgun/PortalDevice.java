@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -138,43 +139,55 @@ public class PortalDevice {
 		PortalPreLaunchEvent prelaunch = new PortalPreLaunchEvent(this.owner, color);
 		Bukkit.getServer().getPluginManager().callEvent(prelaunch);
 
+
 		if (!prelaunch.isCancelled()) {
-			Location eyeloc = this.owner.getEyeLocation();
+
+			Location eyeloc = owner.getEyeLocation();
 			Vector dir = eyeloc.getDirection();
 
 			boolean stop = false;
 
-			for (double count = 1.0D; count <= 201.0D; count += 0.4D) {
+			// d("1");
+			for (double count = 1; count <= PortalGun.portalLen + 1; count += 0.4) {
+				// d("2");
 				Location loc = eyeloc.clone().add(dir.clone().multiply(count));
 				for (Material mat : PortalGun.PortalTransparentMaterials) {
+					// d("3");
 					if (loc.getBlock().getType().equals(mat)) {
+						// d("4 color");
 						if (color.equals(PortalColor.BLUE)) {
-							loc.getWorld().spawnParticle(org.bukkit.Particle.REDSTONE, loc.getX(), loc.getY(),
-									loc.getZ(), 0,
-									0.00392156862745098D, 0.25098039215686274D, 0.996078431372549D, 1.0D);
-							break;
+							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.getX(), loc.getY(), loc.getZ(), 0,
+									((double) 1 / 255), ((double) 64 / 255), ((double) 254 / 255), 1d);
+						} else {
+							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.getX(), loc.getY(), loc.getZ(), 0,
+									((double) 254 / 255), ((double) 180 / 255), ((double) 30 / 255), 1d);
 						}
-						loc.getWorld().spawnParticle(org.bukkit.Particle.REDSTONE, loc.getX(), loc.getY(), loc.getZ(),
-								0,
-								0.996078431372549D, 0.7058823529411765D, 0.11764705882352941D, 1.0D);
-
 						break;
+					} else {
+						// stop = true;
+						// break;
 					}
 				}
-
 				if (stop) {
 					break;
 				}
 			}
 
-			boolean success = true;
+			boolean success = true; // false
 
-			List<Block> blocks = this.owner.getLastTwoTargetBlocks(PortalGun.PortalTransparentMaterials,
-					200);
+			/*
+			 * for (Block blk :
+			 * owner.getLineOfSight(PortalGun.transparentMaterials,
+			 * PortalGun.portalLen)) { if ( TODO
+			 * flooredLocationArrayCompare(PortalGun.Grid(), blk.getLocation()))
+			 * { success = false; break; } }
+			 */
+
+			List<Block> blocks = owner.getLastTwoTargetBlocks(PortalGun.PortalTransparentMaterials, PortalGun.portalLen);
 			BlockFace launchDirection = null;
 
 			if (blocks.size() != 1) {
-				launchDirection = ((Block) blocks.get(1)).getFace((Block) blocks.get(0));
+				launchDirection = blocks.get(1).getFace(blocks.get(0));
 			}
 			if (launchDirection == null) {
 				success = false;
@@ -184,25 +197,25 @@ public class PortalDevice {
 			Bukkit.getServer().getPluginManager().callEvent(launch);
 
 			if (success) {
+
 				Portal portal;
+
 				switch (launchDirection) {
-				case NORTH:
-				case NORTH_EAST:
+				case UP:
+				case DOWN:
 					portal = new Portal(this.owner, color, launchDirection,
-							Methods.YawToBlockFace(this.owner.getEyeLocation().getYaw()),
-							((Block) blocks.get(0)).getLocation(), new Location[] {
-									((Block) blocks.get(0)).getLocation(),
-									((Block) blocks.get(0)).getLocation().getBlock()
-											.getRelative(Methods.YawToBlockFace(this.owner.getEyeLocation().getYaw()))
-											.getLocation() });
+							Methods.YawToBlockFace(this.owner.getEyeLocation().getYaw()), blocks.get(0).getLocation(),
+							blocks.get(0).getLocation(),
+							blocks.get(0).getLocation().getBlock()
+									.getRelative(Methods.YawToBlockFace(this.owner.getEyeLocation().getYaw()))
+									.getLocation());
 					break;
 				default:
 					portal = new Portal(this.owner, color, launchDirection,
-							Methods.YawToBlockFace(this.owner.getEyeLocation().getYaw()),
-							((Block) blocks.get(0)).getLocation(), new Location[] {
-									((Block) blocks.get(0)).getLocation() });
+							Methods.YawToBlockFace(this.owner.getEyeLocation().getYaw()), blocks.get(0).getLocation(),
+							blocks.get(0).getLocation());
+					break;
 				}
-
 				PortalLandingEvent landing = new PortalLandingEvent(portal, ((Block) blocks.get(1)).getLocation());
 				Bukkit.getServer().getPluginManager().callEvent(landing);
 

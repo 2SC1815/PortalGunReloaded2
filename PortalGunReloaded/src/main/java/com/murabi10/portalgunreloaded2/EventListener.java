@@ -16,6 +16,7 @@ import com.murabi10.portalgunreloaded2.portalevents.PortalLandingEvent;
 import com.murabi10.portalgunreloaded2.portalevents.PortalThroughEvent;
 import com.murabi10.portalgunreloaded2.portalgun.PortalDevice;
 import com.murabi10.portalgunreloaded2.testingelement.objects.Cube;
+import com.murabi10.portalgunreloaded2.testingelement.objects.CubeManager;
 
 public class EventListener implements org.bukkit.event.Listener {
 	@EventHandler
@@ -53,15 +54,16 @@ public class EventListener implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onPortalTransport(PortalThroughEvent e) {
+
 		if (e.getTo().getLaunchDirection().equals(BlockFace.DOWN)) {
-			e.setDest(e.getDest().clone().add(0.0D, -1.0D, 0.0D));
+			e.setDest(e.getDest().clone().add(0, -1, 0));
 		}
 
 		boolean ignore = false;
 
 		switch (e.getFrom().getLaunchDirection()) {
-		case NORTH:
-		case NORTH_EAST:
+		case UP:
+		case DOWN:
 			break;
 		default:
 			ignore = true;
@@ -70,20 +72,18 @@ public class EventListener implements org.bukkit.event.Listener {
 		Double vel = null;
 
 		if (e.getEntity().getType().equals(EntityType.PLAYER)) {
-			vel = Double.valueOf(PortalDevice.getDeviceInstance(e.getEntity().getUniqueId()).getVelocity(ignore));
-			e.setV(vel.doubleValue());
+			vel = PortalDevice.getDeviceInstance(e.getEntity().getUniqueId()).getVelocity(ignore);
+			e.setV(vel);
 		} else if (e.getEntity().getType().equals(EntityType.ARMOR_STAND)) {
-			Cube cube = com.murabi10.portalgunreloaded2.testingelement.objects.CubeManager
-					.getCube(e.getEntity().getUniqueId());
+			Cube cube = CubeManager.getCube(e.getEntity().getUniqueId());
 			if (cube != null) {
-				vel = Double.valueOf(cube.getVelocity(ignore));
-				e.setV(vel.doubleValue());
+				vel = cube.getVelocity(ignore);
+				e.setV(vel);
 			}
 		}
 
 		if (vel != null) {
-			Location tmp = e.getDest().clone()
-					.add(Methods.BlockFaceToVector(e.getTo().getLaunchDirection(), vel.doubleValue()));
+			Location tmp = e.getDest().clone().add(Methods.BlockFaceToVector(e.getTo().getLaunchDirection(), vel));
 			if (tmp.getBlock().isEmpty()) {
 				e.setDest(tmp);
 			}
@@ -96,27 +96,27 @@ public class EventListener implements org.bukkit.event.Listener {
 			ArrayList<Location> newjudgment = new ArrayList<Location>();
 
 			switch (e.getPortal().getLaunchDirection()) {
-			case DOWN:
-			case EAST:
-			case EAST_NORTH_EAST:
-			case EAST_SOUTH_EAST:
 			default:
-				for (Location locs : e.getPortal().getLocations()) {
-					newjudgment.add(locs.clone().add(0.0D, -1.0D, 0.0D));
-				}
-				e.getPortal().Replace(e.getPortal().getRepresentativeLocation().clone().add(0.0D, -1.0D, 0.0D),
-						newjudgment);
-				break;
+			case EAST:
+			case SOUTH:
+			case WEST:
 			case NORTH:
-			case NORTH_EAST:
+				for (Location locs : e.getPortal().getLocations()) {
+					newjudgment.add(locs.clone().add(0, -1, 0));
+				}
+				e.getPortal().Replace(e.getPortal().getRepresentativeLocation().clone().add(0, -1, 0), newjudgment);
+				break;
+			case UP:
+			case DOWN:
 				for (Location locs : e.getPortal().getLocations()) {
 					newjudgment.add(locs.getBlock()
 							.getRelative(e.getPortal().getSubstitutionDirection().getOppositeFace()).getLocation());
 				}
-
-				e.getPortal().Replace(e.getPortal().getRepresentativeLocation().getBlock()
-						.getRelative(e.getPortal().getSubstitutionDirection().getOppositeFace()).getLocation(),
-						newjudgment);
+				e.getPortal()
+						.Replace(e.getPortal().getRepresentativeLocation().getBlock()
+								.getRelative(e.getPortal().getSubstitutionDirection().getOppositeFace()).getLocation(),
+								newjudgment);
+				break;
 			}
 
 			if (!Methods.isSuitable(e.getPortal(), true)) {

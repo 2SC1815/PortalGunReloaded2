@@ -49,7 +49,8 @@ public class AerialFaithPlate extends TestingElement {
 	}
 
 	protected void destroy() {
-		getRelative1(this.OriginLocation).getBlock().setType(Material.AIR);
+		//getRelative1(this.OriginLocation).getBlock().setType(Material.AIR);
+
 	}
 
 	protected void Run() {
@@ -58,7 +59,7 @@ public class AerialFaithPlate extends TestingElement {
 			if ((com.murabi10.portalgunreloaded2.Methods.LocationEquals(ent.getLocation(),
 					getRelative1(this.OriginLocation).clone().add(0.0D, 1.0D, 0.0D)))
 					&& ((!isEditMode())
-							|| ((isEditMode()) && ((ent instanceof Player)) && (((Player) ent).isSneaking())))) {
+							|| ((isEditMode()) && ((ent instanceof Player)) && (!((Player) ent).isSneaking())))) {
 				ent.setVelocity(com.murabi10.portalgunreloaded2.Methods.DirectionToVector(this.Pitch, this.Yaw).clone()
 						.multiply(this.power));
 				this.OriginLocation.getWorld().playSound(getRelative1(this.OriginLocation),

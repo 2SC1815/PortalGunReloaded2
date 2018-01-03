@@ -286,7 +286,7 @@ public class ElementPlaceGUI extends GUI {
 			}
 		}, new String[] {
 
-				"論理否定:", "入力がONだとOFFを出力し、", "OFFだとONを出力する", "入力が複数ある場合は否定論理積として動作する" }));
+				"論理否定:", "入力がONだとOFFを出力し、", "OFFだとONを出力する", "入力が複数ある場合は否定論理積として動作する", "入力に何もつながっていないと常にOFF" }));
 
 		addbutton(new Button(Material.DIODE, 2, (short) 0, "OR Gate", 9, new GUIFunction() {
 			public boolean click(Player p, ClickType type) {

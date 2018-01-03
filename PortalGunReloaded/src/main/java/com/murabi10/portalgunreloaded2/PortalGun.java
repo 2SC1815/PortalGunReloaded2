@@ -118,7 +118,7 @@ public class PortalGun extends JavaPlugin {
 	}
 
 	public static Plugin getPlugin() {
-		return org.bukkit.Bukkit.getPluginManager().getPlugin("PortalGunReloaded");
+		return org.bukkit.Bukkit.getPluginManager().getPlugin("PortalGunReloaded2");
 	}
 }
 

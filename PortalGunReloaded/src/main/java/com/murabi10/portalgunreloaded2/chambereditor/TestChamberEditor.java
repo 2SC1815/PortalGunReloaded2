@@ -120,8 +120,8 @@ public class TestChamberEditor {
 		queue.clear();
 		queue = null;
 
-		for (Block b : new Cuboid(this.ChamberOriginLoc.clone().add(1.0D, 1.0D, 1.0D),
-				this.ChamberOriginLoc.clone().add(63.0D, 63.0D, 63.0D))) {
+		for (Block b : new Cuboid(this.ChamberOriginLoc.clone().add(2.0D, 2.0D, 2.0D),
+				this.ChamberOriginLoc.clone().add(62.0D, 60.0D, 62.0D))) {
 			Location loc = b.getLocation();
 			if ((loc.getBlock().isEmpty()) && (loc.getBlock().getRelative(BlockFace.UP).isEmpty())) {
 				StartPoint point = new StartPoint(this.ChamberOriginLoc, Methods.getX(this.ChamberOriginLoc, loc),

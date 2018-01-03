@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -12,11 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import com.murabi10.portalgunreloaded2.devices.DeviceManager;
 import com.murabi10.portalgunreloaded2.portalgun.Portal;
 import com.murabi10.portalgunreloaded2.portalgun.PortalDevice;
-import com.murabi10.portalgunreloaded2.selector.EditChamberSelector;
-import com.murabi10.portalgunreloaded2.selector.SortType;
-import com.murabi10.portalgunreloaded2.testingelement.fixture.ThermalDiscouragementBeam;
-import com.murabi10.portalgunreloaded2.testingelement.objects.Cube;
-import com.murabi10.portalgunreloaded2.testingelement.objects.CubeType;
 
 public class DebugGUI extends GUI {
 	public void init() {
@@ -62,33 +56,16 @@ public class DebugGUI extends GUI {
 
 				"現在設置されているポータルの", "情報を表示します" }));
 
-		addbutton(new Button(Material.STONE, 2, (short) 0, "DEBUG : TEST CHAMBERS", 4, new GUIFunction() {
-
-			public boolean click(Player p, ClickType type) {
-
-				try {
-
-					p.closeInventory();
-					EditChamberSelector.OpenGUI(p, 0, SortType.NAME, "");
-				} catch (Exception e) {
-					e.printStackTrace();
-					p.sendMessage("なんかえらーでた");
-				}
-				return false;
-			}
-		}, new String[] {
-
-				"テストチェンバーの", "テスト" }));
 
 		addbutton(new Button(Material.STONE, 2, (short) 0, "DEBUG : GIVE PORTALGUN", 1, new GUIFunction() {
 
 			public boolean click(Player p, ClickType type) {
 				ItemStack item = null;
 				switch (type) {
-				case CONTROL_DROP:
+				case LEFT:
 					item = DeviceManager.getDevice("PORTALGUN").getItem();
 					break;
-				case DOUBLE_CLICK:
+				case RIGHT:
 					item = DeviceManager.getDevice("BROKEN_PORTALGUN").getItem();
 					break;
 				default:
@@ -108,7 +85,7 @@ public class DebugGUI extends GUI {
 
 				"左クリックでデュアルポータルガン、", "右クリックでシングルポータルガンを出す" }));
 
-		addbutton(new Button(Material.REDSTONE_BLOCK, 2, (short) 0, "DEBUG : CUBE TEST", 5, new GUIFunction() {
+		/*addbutton(new Button(Material.REDSTONE_BLOCK, 2, (short) 0, "DEBUG : CUBE TEST", 5, new GUIFunction() {
 
 			public boolean click(Player p, ClickType type) {
 
@@ -146,7 +123,7 @@ public class DebugGUI extends GUI {
 					}
 				}, new String[] {
 
-						"LASER TEST!" }));
+						"LASER TEST!" }));*/
 
 		addbutton(new Button(Material.GOLD_BLOCK, 2, (short) 0, "DEBUG : GET TOOLS", 7, new GUIFunction() {
 

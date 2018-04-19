@@ -4,7 +4,6 @@
 import java.util.ArrayList;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.murabi10.portalgunreloaded2.BlockData;
@@ -34,6 +33,7 @@ import com.murabi10.portalgunreloaded2.testingelement.TestingElement;
    @SuppressWarnings("deprecation")
 public void placeToWorld(Location loc)
    {
+	   //System.out.println("PLACE");
      for (int x = 0; x < this.Chamber.getXSize(); x++) {
        for (int y = 0; y < this.Chamber.getYSize(); y++) {
          for (int z = 0; z < this.Chamber.getZSize(); z++) {
@@ -41,6 +41,7 @@ public void placeToWorld(Location loc)
            BlockData b = this.Chamber.getBlock(x, y, z);
            tmp.getBlock().setType(b.getMaterial());
            tmp.getBlock().setData(b.GetData());
+
          }
        }
      }
@@ -48,6 +49,8 @@ public void placeToWorld(Location loc)
 
    public void deleteFromWorld(Location loc)
    {
+	  // System.out.println("DELETE");
+	   /*
      for (int x = 0; x < this.Chamber.getXSize(); x++) {
        for (int y = 0; y < this.Chamber.getYSize(); y++) {
          for (int z = 0; z < this.Chamber.getZSize(); z++) {
@@ -55,7 +58,7 @@ public void placeToWorld(Location loc)
            tmp.getBlock().setType(Material.AIR);
          }
        }
-     }
+     }*/
    }
 
 

@@ -22,6 +22,7 @@ import com.murabi10.portalgunreloaded2.portalgun.vector;
 import com.murabi10.portalgunreloaded2.selector.EditChamberSelector;
 import com.murabi10.portalgunreloaded2.selector.ItemClickManager;
 import com.murabi10.portalgunreloaded2.selector.PlayChamberSelector;
+import com.murabi10.portalgunreloaded2.selector.PlayProcessCommand;
 import com.murabi10.portalgunreloaded2.selector.StringInputManager;
 import com.murabi10.portalgunreloaded2.testingelement.objects.CubeManager;
 import com.murabi10.portalgunreloaded2.testingelement.objects.GelManager;
@@ -74,6 +75,36 @@ public class PortalGun extends JavaPlugin {
 		PortalConductors.add(new BlockData(Material.STONE, (byte) 4));
 	}
 
+	/*
+	 * PortalGunReloaded2
+	 * (C) 2017 - 2018 Code by 2SC1815 / W.T.  idea from Portal2
+	 *
+	 * Special thanks : おうえんしてくれたみんな。
+	 *
+	 *
+	 * PortalGun : 初期リリース。static使いすぎ。オブジェクト指向を理解していなかったころのコード。
+	 * 基本的な機能しかなかったうえ、バグが多かったが、これがすべての始まりである。
+	 *
+	 * PortalGunReloaded : PortalGunの後継。オブジェクト指向を理解したのでスマートに作られるようになり、
+	 * さらにキューブが物理的に動くようになった！そしてチェンバーを簡単に作れるようにチェンバーエディターを実装する。
+	 *
+	 * PortalGunReloaded2 : PortalGunReloadedのソースが入ったハードディスクが壊れてしまい、心が折れかけたが、
+	 * ビルド済みのjarファイルから逆コンパイルしてサルベージすることに成功。その後手直しをしたバージョン
+	 *
+	 *
+	 * 偉大なる科学は巨人たちの肩に支えられていると言う者もいるが、Aperture Science は違う。
+	 * 我々はゼロからすべてを築き上げる。介添えは一切なしだ。
+	 *
+	 * 宇宙に飛び出し、海岸を攻め、金塊を持ち帰ったのは我々だ! いまや世界中が敵に回り、
+	 * 信頼できるのはお前だけだ! お前の根性が気に入った! もう少し速く解いてくれると申し分ないが。さっそく取りかかれ!
+	 *
+	 * いいか、レモンを与えられたからといって、レモネードなど作ってはならない。そんなものは突き返してやれ!
+	 * 「これで何をしろというのだ! こんなものはいらん!」と吠えてやるのだ!
+	 * 上の者を出せ! このCave Johnson様にレモンなどを与えようとしたことを、心底後悔させてやる! 私を誰だと思っている?!
+	 * お前の家など軽く焼き払える男だ! そのレモンでな! エンジニア連中に可燃性レモンを開発させ、お前の家など焼き討ちしてやる!
+	 *
+	 */
+
 	public void onEnable() {
 		saveDefaultConfig();
 		getConfig().options().copyDefaults(true);
@@ -103,13 +134,14 @@ public class PortalGun extends JavaPlugin {
 		getCommand("editor").setExecutor(new EditChamberSelector());
 		getCommand("select").setExecutor(new PlayChamberSelector());
 		getCommand("retire").setExecutor(new Retire(this));
+		getCommand("process").setExecutor(new PlayProcessCommand());
 
 		new PortalTransportRunnable().runTaskTimer(this, 10L, 1L);
 		new CubeTransportRunnable().runTaskTimer(this, 10L, 1L);
 		new GelTransportRunnable().runTaskTimer(this, 10L, 1L);
 		new vector().runTaskTimer(this, 10L, 1L);
 
-		EditChamberSelector.updateData();
+		//EditChamberSelector.updateData(null);
 	}
 
 	public void onDisable() {

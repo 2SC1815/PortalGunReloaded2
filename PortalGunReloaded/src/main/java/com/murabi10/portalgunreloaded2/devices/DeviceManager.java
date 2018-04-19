@@ -18,6 +18,7 @@ import com.murabi10.portalgunreloaded2.chambereditor.TestChamberEditor;
 import com.murabi10.portalgunreloaded2.portalgun.PortalColor;
 import com.murabi10.portalgunreloaded2.portalgun.PortalDevice;
 import com.murabi10.portalgunreloaded2.selector.StringInputWait;
+import com.murabi10.portalgunreloaded2.testingelement.LinkType;
 import com.murabi10.portalgunreloaded2.testingelement.TestingElement;
 import com.murabi10.portalgunreloaded2.testingelement.fixture.AerialFaithPlate;
 import com.murabi10.portalgunreloaded2.testingelement.fixture.Speaker;
@@ -95,7 +96,7 @@ public class DeviceManager implements org.bukkit.event.Listener {
 						if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
 							player.sendMessage("データタイプ: " + target.getType().toString());
 
-							/*if (!target.getLinkType().equals(LinkType.DNC)) {
+							if (!target.getLinkType().equals(LinkType.DNC)) {
 							  player.sendMessage("入出力タイプ: " + target.getLinkType().toString());
 							  player.sendMessage("この装置の入力につながっている装置：");
 							  for (TestingElement sws : target.Switches()) {
@@ -103,29 +104,29 @@ public class DeviceManager implements org.bukkit.event.Listener {
 							    player.sendMessage("タイプ: " + sws.getType().toString());
 							  }
 							  player.sendMessage("この装置の出力につながっている装置：");
-							  Iterator localIterator2; for (??? = editor.elements().iterator(); ???.hasNext();
-							      localIterator2.hasNext())
+
+							  for (TestingElement sws : editor.elements())
 							  {
-							    TestingElement in = (TestingElement)???.next();
-							    localIterator2 = in.Switches().iterator(); continue;TestingElement sws = (TestingElement)localIterator2.next();
-							    if (sws.equals(target)) {
-							      player.sendMessage("座標: " + in.getRelative1(editor.getOrigin()).toString());
-							      player.sendMessage("タイプ: " + in.getType().toString());
-							    }
+								  for (TestingElement in : sws.Switches()) {
+									    if (in.equals(target)) {
+									      player.sendMessage("座標: " + sws.getRelative1(editor.getOrigin()).toString());
+									      player.sendMessage("タイプ: " + sws.getType().toString());
+									      break;
+									    }
+								  }
 							  }
-							}
-							else {
+							} else {
 							  player.sendMessage("(入出力関係を持つことができない装置です)");
-							}*/
+							}
 
 							switch (target.getType()) {
-							case GEL_DROPPER:
+							case AERIAL_FAITH_PLATE:
 								AerialFaithPlate afp = (AerialFaithPlate) target;
 								player.sendMessage("発射方向(Pitch): " + afp.getPitch());
 								player.sendMessage("発射方向(Yaw):   " + afp.getYaw());
 								player.sendMessage("発射力(Power):   " + afp.getPower());
 								break;
-							case OR:
+							case SPEAKER:
 								Speaker speaker = (Speaker) target;
 								player.sendMessage("設定されたメッセージ: " + speaker.getString());
 								break;
@@ -142,7 +143,7 @@ public class DeviceManager implements org.bukkit.event.Listener {
 							final Player p = player;
 
 							switch (target.getType()) {
-							case GEL_DROPPER:
+							case AERIAL_FAITH_PLATE:
 								player.sendMessage("Pitch(90~-90), Yaw(360~0), Powerの順にチャット入力してください >");
 								try {
 									new StringInputWait(player, new EditorFunction() {
@@ -194,8 +195,8 @@ public class DeviceManager implements org.bukkit.event.Listener {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-
-							case OR:
+								break;
+							case SPEAKER:
 								player.sendMessage("新しいメッセージをチャット入力してください >");
 								try {
 									new StringInputWait(player, new EditorFunction() {
@@ -203,6 +204,7 @@ public class DeviceManager implements org.bukkit.event.Listener {
 											if (TestChamberEditor.getEditor(p) == null) {
 												return false;
 											}
+											System.out.println(p.getName() + " setting quote : " + str);
 											Speaker speaker = (Speaker) TestChamberEditor.getEditor(p).getElement(loc);
 											speaker.setString(str);
 											p.sendMessage("完了しました");
@@ -212,7 +214,7 @@ public class DeviceManager implements org.bukkit.event.Listener {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-
+								break;
 							case TIMER:
 								player.sendMessage("設定秒数をチャット入力してください");
 								try {

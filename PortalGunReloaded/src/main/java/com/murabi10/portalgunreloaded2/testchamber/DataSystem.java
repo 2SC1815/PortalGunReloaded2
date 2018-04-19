@@ -94,12 +94,40 @@ import com.murabi10.portalgunreloaded2.PortalGun;
      return null;
    }
 
+   public static boolean SaveTestProcess(TestProcess process, String dirName) {
+
+     try
+     {
+       ObjectOutputStream objOutStream = new ObjectOutputStream(new FileOutputStream(ProcessPath(dirName)));
+
+       objOutStream.writeObject(process);
+       objOutStream.close();
+     }
+     catch (FileNotFoundException e) {
+       e.printStackTrace();
+       return false;
+     } catch (IOException e) {
+       e.printStackTrace();
+       return false;
+     }
+
+     return true;
+   }
+
+   public static TestProcess getTestProcess(String dirName) throws FileNotFoundException, IOException, ClassNotFoundException {
+       ObjectInputStream objInStream = new ObjectInputStream(new FileInputStream(new File(ProcessPath(dirName))));
+       TestProcess chamber = (TestProcess)objInStream.readObject();
+       objInStream.close();
+       chamber.setFilename(dirName);
+       return chamber;
+   }
+
    public static boolean isCompleteExist(String dirName) {
      File data = new File(DataPath(dirName));
      File chamber = new File(ChamberPath(dirName));
      return (data.exists()) && (chamber.exists()) && (data.isFile()) && (chamber.isFile()) &&
-       (data.getName().endsWith(".cdata")) &&
-       (chamber.getName().endsWith(".chamber"));
+       (data.getName().endsWith(".cbd")) &&
+       (chamber.getName().endsWith(".cmb"));
    }
 
    public static ArrayList<String> getChambers() {
@@ -115,11 +143,28 @@ import com.murabi10.portalgunreloaded2.PortalGun;
      return rtnfile;
    }
 
+   public static ArrayList<String> getTestProcesses() {
+     ArrayList<String> rtnfile = new ArrayList<String>();
+     File[] files = new File(PortalGun.TEST_CHAMBER_FILE_PATH).listFiles();
+     for (int i = 0; i < files.length; i++) {
+       File f = files[i];
+       String fName = f.getName();
+       if (fName.endsWith(".seq")) {
+         rtnfile.add(fName);
+       }
+     }
+     return rtnfile;
+   }
+
    public static void delete(String dirName)
    {
      new File(DataPath(dirName)).delete();
      new File(ChamberPath(dirName)).delete();
      new File(PortalGun.TEST_CHAMBER_FILE_PATH + dirName).delete();
+   }
+
+   public static void deleteProcess(String name) {
+	   new File(ProcessPath(name)).delete();
    }
 
    public static void rename(String dirName, String out)
@@ -133,12 +178,17 @@ import com.murabi10.portalgunreloaded2.PortalGun;
 
    private static String ChamberPath(String bindname) {
      return
-       PortalGun.TEST_CHAMBER_FILE_PATH + bindname + File.separator + bindname + ".chamber";
+       PortalGun.TEST_CHAMBER_FILE_PATH + bindname + File.separator + bindname + ".cmb";
+   }
+
+   private static String ProcessPath(String bindname) {
+     return
+       PortalGun.TEST_CHAMBER_FILE_PATH + bindname + ".seq";
    }
 
    private static String DataPath(String bindname) {
      return
-       PortalGun.TEST_CHAMBER_FILE_PATH + bindname + File.separator + bindname + ".cdata";
+       PortalGun.TEST_CHAMBER_FILE_PATH + bindname + File.separator + bindname + ".cbd";
    }
 
    public static boolean Save(TestChamberData td, String dirName)

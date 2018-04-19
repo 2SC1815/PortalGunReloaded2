@@ -29,10 +29,13 @@ public class TestQueue implements org.bukkit.event.Listener {
 	private Location originLoc = null;
 	private Location StartLocation = null;
 	private ItemStack[] inv;
+	private int index = 0;
 
-	public TestQueue(Player testSubject, TestChamberData testChamber, Location exit, Location lobby) {
+	private ArrayList<TestChamberData> testChambers = new ArrayList<TestChamberData>();
+
+	public TestQueue(Player testSubject, ArrayList<TestChamberData> testChamber, Location exit, Location lobby) {
 		this.testSubject = testSubject;
-		this.testChamberData = testChamber;
+		this.testChambers = testChamber;
 		this.exitLocation = exit;
 		this.lobbyLocation = lobby;
 	}
@@ -47,6 +50,7 @@ public class TestQueue implements org.bukkit.event.Listener {
 			this.originLoc = reserve();
 		}
 		if (this.originLoc != null) {
+			this.testChamberData = testChambers.get(index);
 			this.testChamber = DataSystem.getChamberObject(this.testChamberData.getFileName());
 			this.testChamber.placeToWorld(this.originLoc);
 
@@ -144,9 +148,16 @@ public class TestQueue implements org.bukkit.event.Listener {
 	@EventHandler
 	public void onGoal(PlayerChamberGoalEvent e) {
 		if (this.testSubject.getUniqueId().equals(e.getPlayer().getUniqueId())) {
-			e.getPlayer().teleport(this.exitLocation);
-			e.getPlayer().sendTitle("テストチェンバークリア！", "That's awesome!");
-			stop();
+
+			stopTestingElements();
+			index++;
+			if (index >= testChambers.size()) {
+				e.getPlayer().teleport(this.exitLocation);
+				e.getPlayer().sendTitle("テストチェンバークリア！", "That's awesome!");
+				stop();
+			} else {
+				BeginTest(false);
+			}
 			PortalDevice d = PortalDevice.getDeviceInstance(e.getPlayer());
 			if (d != null) {
 				d.clearPortal();
@@ -209,6 +220,10 @@ public class TestQueue implements org.bukkit.event.Listener {
 		PlayerChamberGoalEvent.getHandlerList().unregister(this);
 		PlayerRespawnEvent.getHandlerList().unregister(this);
 		PlayerQuitEvent.getHandlerList().unregister(this);
+		stopTestingElements();
+	}
+
+	private void stopTestingElements() {
 		this.testChamber.deleteFromWorld(this.originLoc);
 		for (TestingElement element : this.testChamber.TestingElements()) {
 			element.disable();

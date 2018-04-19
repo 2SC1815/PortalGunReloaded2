@@ -16,14 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.murabi10.portalgunreloaded2.chambereditor.EditorFunction;
+import com.murabi10.portalgunreloaded2.portalgun.PortalDevice;
 import com.murabi10.portalgunreloaded2.testchamber.DataSystem;
 import com.murabi10.portalgunreloaded2.testchamber.TestChamberData;
 import com.murabi10.portalgunreloaded2.testchamber.TestQueue;
 
 public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 	public static ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
-	private static int tpage = 0;
-
 	private static final int pageper = (9 * 3) - 4;
 
 	private static final String next = "@NEXT";
@@ -40,6 +39,7 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 					if (args.length == 0) {
 						try {
 							((Player) ent).closeInventory();
+							PortalDevice.getDeviceInstance(((Player) ent)).setPage(0);
 							OpenGUI((Player) ent, 0, SortType.NAME, "");
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -53,7 +53,10 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 
 						ent.sendMessage("しばらくおまちください");
 
-						TestQueue queue = new TestQueue((Player) ent, DataSystem.getChamberData(chamberFileName),
+						ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
+						data.add(DataSystem.getChamberData(chamberFileName));
+
+						TestQueue queue = new TestQueue((Player) ent, data,
 								ent.getLocation().clone(), ent.getLocation().clone());
 
 						queue.BeginTest();
@@ -65,6 +68,7 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 			if (args.length == 0) {
 				try {
 					((Player) sender).closeInventory();
+					PortalDevice.getDeviceInstance(((Player) sender)).setPage(0);
 					OpenGUI((Player) sender, 0, SortType.NAME, "");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,7 +81,10 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 
 				sender.sendMessage("しばらくおまちください");
 
-				TestQueue queue = new TestQueue((Player) sender, DataSystem.getChamberData(chamberFileName),
+				ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
+				data.add(DataSystem.getChamberData(chamberFileName));
+
+				TestQueue queue = new TestQueue((Player) sender, data,
 						((Player) sender).getLocation().clone(), ((Player) sender).getLocation().clone());
 
 				queue.BeginTest();
@@ -89,16 +96,16 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 		return true;
 	}
 
-	public static void updateData() {
+	public static void updateData(Player p) {
 		data.clear();
 		for (String name : DataSystem.getChambers()) {
 			data.add(DataSystem.getChamberData(name));
 		}
-		tpage = data.size() / pageper;
+		PortalDevice.getDeviceInstance(p).setPage(data.size() / pageper);
 	}
 
 	public static void OpenGUI(Player p, int page, SortType type, final String grep) throws Exception {
-		updateData();
+		updateData(p);
 		ArrayList<TestChamberData> refinedData = new ArrayList<TestChamberData>();
 
 		for (TestChamberData d : data) {
@@ -118,6 +125,10 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 		} else if (!grep.equals("")) {
 			disp = "\"" + grep + "\"";
 		}
+
+		PortalDevice.getDeviceInstance(p).setPage(page);
+
+		int tpage = PortalDevice.getDeviceInstance(p).getPage();
 
 		Inventory UI = org.bukkit.Bukkit.getServer().createInventory(null, 27,
 				disp + " (ページ" + page + "/" + tpage + ")");
@@ -202,6 +213,8 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 
 		final SortType t = type;
 
+		final int final_page = tpage;
+
 		new ItemClickWait(p, new ClickFunction() {
 
 			public boolean click(Player p, ItemStack item) {
@@ -209,7 +222,7 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 					if (item.getItemMeta().getLore().contains(next)) {
 						p.closeInventory();
 						try {
-							PlayChamberSelector.OpenGUI(p, tpage + 1, t, grep);
+							PlayChamberSelector.OpenGUI(p, final_page + 1, t, grep);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -218,7 +231,7 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 					if (item.getItemMeta().getLore().contains(ret)) {
 						p.closeInventory();
 						try {
-							PlayChamberSelector.OpenGUI(p, tpage - 1, t, grep);
+							PlayChamberSelector.OpenGUI(p, final_page - 1, t, grep);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -234,7 +247,7 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 								public boolean reveive(String str) {
 									if (str.equalsIgnoreCase(exit)) {
 										try {
-											PlayChamberSelector.OpenGUI(pl, tpage, t, "");
+											PlayChamberSelector.OpenGUI(pl, final_page, t, "");
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -261,7 +274,9 @@ public class PlayChamberSelector implements org.bukkit.command.CommandExecutor {
 
 						p.sendMessage("しばらくおまちください");
 
-						TestQueue queue = new TestQueue(p, DataSystem.getChamberData(chamberFileName),
+						ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
+						data.add(DataSystem.getChamberData(chamberFileName));
+						TestQueue queue = new TestQueue(p, data,
 								p.getLocation().clone(), p.getLocation().clone());
 
 						queue.BeginTest();

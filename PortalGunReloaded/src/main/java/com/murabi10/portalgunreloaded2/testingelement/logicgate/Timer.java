@@ -24,7 +24,8 @@ public class Timer extends TestingElement {
 
 	protected void destroy() {
 		getRelative1(this.OriginLocation).getBlock().setType(Material.AIR);
-		this.timerRunnable.cancel();
+		if (this.timerRunnable != null)
+			this.timerRunnable.cancel();
 	}
 
 	protected void Run() {

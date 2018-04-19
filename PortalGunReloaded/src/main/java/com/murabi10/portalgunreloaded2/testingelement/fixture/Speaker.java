@@ -1,5 +1,6 @@
 package com.murabi10.portalgunreloaded2.testingelement.fixture;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -28,7 +29,7 @@ public class Speaker extends TestingElement {
 
 	protected void Run() {
 		if (isEditMode()) {
-			this.activated = false;
+			this.activated = false; //false
 		}
 
 		if (this.i >= 3) {
@@ -45,7 +46,7 @@ public class Speaker extends TestingElement {
 			}
 
 			if ((isInput() != this.oldActivated) && (isInput())) {
-				getTargetPlayer().sendMessage("録音メッセージ： " + this.message);
+				getTargetPlayer().sendMessage(ChatColor.GOLD + "録音メッセージ： " + this.message);
 
 				if (!isEditMode()) {
 					this.activated = true;

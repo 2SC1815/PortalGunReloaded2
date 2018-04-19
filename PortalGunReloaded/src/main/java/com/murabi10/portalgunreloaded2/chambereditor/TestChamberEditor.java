@@ -120,8 +120,8 @@ public class TestChamberEditor {
 		queue.clear();
 		queue = null;
 
-		for (Block b : new Cuboid(this.ChamberOriginLoc.clone().add(2.0D, 2.0D, 2.0D),
-				this.ChamberOriginLoc.clone().add(62.0D, 60.0D, 62.0D))) {
+		for (Block b : new Cuboid(this.ChamberOriginLoc.clone().add(6.0D, 6.0D, 6.0D),
+				this.ChamberOriginLoc.clone().add(44.0D, 44.0D, 44.0D))) {
 			Location loc = b.getLocation();
 			if ((loc.getBlock().isEmpty()) && (loc.getBlock().getRelative(BlockFace.UP).isEmpty())) {
 				StartPoint point = new StartPoint(this.ChamberOriginLoc, Methods.getX(this.ChamberOriginLoc, loc),
@@ -132,7 +132,7 @@ public class TestChamberEditor {
 				point.setTargetPlayer(this.EditPlayer);
 				point.initRunnable();
 
-				this.EditPlayer.teleport(loc);
+				this.EditPlayer.teleport(point.getRelative1(ChamberOriginLoc));
 				return;
 			}
 		}
@@ -143,7 +143,7 @@ public class TestChamberEditor {
 		StartPoint point = new StartPoint(this.ChamberOriginLoc, Methods.getX(this.ChamberOriginLoc, loc),
 				Methods.getY(this.ChamberOriginLoc, loc), Methods.getZ(this.ChamberOriginLoc, loc));
 		AddTestElement(point);
-		this.EditPlayer.teleport(loc);
+		this.EditPlayer.teleport(point.getRelative1(ChamberOriginLoc));
 	}
 
 	public void Save() {
@@ -174,7 +174,7 @@ public class TestChamberEditor {
 		this.target.deleteFromWorld(this.ChamberOriginLoc);
 		EditChamberSelector.remove(this.ChamberOriginLoc);
 		this.EditPlayer.teleport(this.EditPlayer.getBedSpawnLocation());
-		EditChamberSelector.updateData();
+		EditChamberSelector.updateData(this.EditPlayer);
 	}
 
 	public void printData() {

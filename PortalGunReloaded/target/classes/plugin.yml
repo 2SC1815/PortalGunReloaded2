@@ -17,3 +17,6 @@ commands:
    retire:
       description: retire current chamber
       usage: /<command>
+   process:
+      description: edit chamber test process
+      usage: /<command>

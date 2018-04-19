@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.murabi10.portalgunreloaded2.chambereditor.EditorFunction;
 import com.murabi10.portalgunreloaded2.chambereditor.TestChamberEditor;
+import com.murabi10.portalgunreloaded2.portalgun.PortalDevice;
 import com.murabi10.portalgunreloaded2.testchamber.DataSystem;
 import com.murabi10.portalgunreloaded2.testchamber.GunType;
 import com.murabi10.portalgunreloaded2.testchamber.TestChamber;
@@ -30,7 +31,6 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 
 	public static ArrayList<TestChamberData> data = new ArrayList<TestChamberData>();
 
-	private static int tpage = 0;
 	private static final int pageper = (9 * 3) - 4;
 
 	private static final String next = "@NEXT";
@@ -47,6 +47,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 				if ((ent instanceof Player)) {
 					try {
 						((Player) ent).closeInventory();
+						PortalDevice.getDeviceInstance(((Player) ent)).setPage(0);
 						OpenGUI((Player) ent, 0, SortType.NAME, "");
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -58,6 +59,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 		} else if ((sender instanceof Player)) {
 			try {
 				((Player) sender).closeInventory();
+				PortalDevice.getDeviceInstance(((Player) sender)).setPage(0);
 				OpenGUI((Player) sender, 0, SortType.NAME, "");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -74,16 +76,18 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 		locs.remove(loc);
 	}
 
-	public static void updateData() {
+	public static void updateData(Player p) {
 		data.clear();
 		for (String name : DataSystem.getChambers()) {
 			data.add(DataSystem.getChamberData(name));
 		}
-		tpage = data.size() / pageper;
+
+		PortalDevice.getDeviceInstance(p).setPage(data.size() / pageper);
+
 	}
 
 	public static void OpenGUI(Player p, int page, SortType type, final String grep) throws Exception {
-		updateData();
+		updateData(p);
 		ArrayList<TestChamberData> refinedData = new ArrayList<TestChamberData>();
 
 		for (TestChamberData d : data) {
@@ -101,6 +105,11 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 		} else if (!grep.equals("")) {
 			disp = "\"" + grep + "\"";
 		}
+
+
+		PortalDevice.getDeviceInstance(p).setPage(page);
+
+		int tpage = PortalDevice.getDeviceInstance(p).getPage();
 
 		Inventory UI = Bukkit.getServer().createInventory(null, 27, disp + " (ページ" + page + "/" + tpage + ")");
 		if (page > 0) {
@@ -189,6 +198,8 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 
 		final SortType t = type;
 
+		final int final_page = tpage;
+
 		new ItemClickWait(p, new ClickFunction() {
 
 			public boolean click(Player p, ItemStack item) {
@@ -196,7 +207,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 					if (item.getItemMeta().getLore().contains(next)) {
 						p.closeInventory();
 						try {
-							EditChamberSelector.OpenGUI(p, tpage + 1, t, grep);
+							EditChamberSelector.OpenGUI(p, final_page + 1, t, grep);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -205,7 +216,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 					if (item.getItemMeta().getLore().contains(ret)) {
 						p.closeInventory();
 						try {
-							EditChamberSelector.OpenGUI(p, tpage - 1, t, grep);
+							EditChamberSelector.OpenGUI(p, final_page - 1, t, grep);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -221,7 +232,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 								public boolean reveive(String str) {
 									if (str.equalsIgnoreCase(exit)) {
 										try {
-											EditChamberSelector.OpenGUI(pl, tpage, t, "");
+											EditChamberSelector.OpenGUI(pl, final_page, t, "");
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -247,7 +258,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 						if (loc == null) {
 							p.sendMessage("エディターが満員です。");
 							try {
-								EditChamberSelector.OpenGUI(p, tpage, t, grep);
+								EditChamberSelector.OpenGUI(p, final_page, t, grep);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -265,7 +276,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 								public boolean reveive(String str) {
 									if (str.equalsIgnoreCase(exit)) {
 										try {
-											EditChamberSelector.OpenGUI(pl, tpage, t, "");
+											EditChamberSelector.OpenGUI(pl, final_page, t, "");
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -305,7 +316,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 										try {
 											DataSystem.Save(tc, td, str);
 
-											EditChamberSelector.OpenChamberEditMenu(pl, str, tpage, t, grep);
+											EditChamberSelector.OpenChamberEditMenu(pl, str, final_page, t, grep);
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -326,7 +337,7 @@ public class EditChamberSelector implements org.bukkit.command.CommandExecutor {
 					if (item.getItemMeta().getLore().contains(chamber)) {
 						String chamberFileName = item.getItemMeta().getDisplayName();
 
-						EditChamberSelector.OpenChamberEditMenu(p, chamberFileName, tpage, t, grep);
+						EditChamberSelector.OpenChamberEditMenu(p, chamberFileName, final_page, t, grep);
 
 						return false;
 					}

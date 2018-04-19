@@ -45,9 +45,16 @@ public class ItemFrameElement extends TestingElement {
 	protected void Run() {
 		if (this.i >= 7) {
 			if (this.frame == null) {
+				try {
 				this.frame = ((ItemFrame) this.OriginLocation.getWorld().spawnEntity(
 						getRelative1(this.OriginLocation).getBlock().getRelative(getDirection()).getLocation(),
 						EntityType.ITEM_FRAME));
+				} catch(Exception e) {
+					System.out.println("額縁の設置に失敗しました");
+					e.printStackTrace();
+					this.disable();
+					return;
+				}
 				this.frame.setFacingDirection(getDirection());
 				ItemStack i = new ItemStack(this.m != null ? this.m : Material.AIR);
 				i.setDurability(this.data);

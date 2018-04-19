@@ -23,6 +23,7 @@ import com.murabi10.portalgunreloaded2.portalevents.PortalLaunchEvent;
 import com.murabi10.portalgunreloaded2.portalevents.PortalPreLaunchEvent;
 import com.murabi10.portalgunreloaded2.selector.ItemClickWait;
 import com.murabi10.portalgunreloaded2.selector.StringInputWait;
+import com.murabi10.portalgunreloaded2.testchamber.TestChamberData;
 import com.murabi10.portalgunreloaded2.testchamber.TestQueue;
 import com.murabi10.portalgunreloaded2.testingelement.objects.Cube;
 
@@ -103,6 +104,10 @@ public class PortalDevice {
 	private StringInputWait strwait = null;
 
 	private TestQueue queue = null;
+
+	private int page = 0;
+
+	private static ArrayList<TestChamberData> currentEditSequence = new ArrayList<TestChamberData>();
 
 	public double getVelocity(boolean ignoreVertical) {
 		double max = 0.0D;
@@ -424,6 +429,22 @@ public class PortalDevice {
 
 	public void setQueue(TestQueue queue) {
 		this.queue = queue;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public static ArrayList<TestChamberData> getCurrentEditSequence() {
+		return currentEditSequence;
+	}
+
+	public static void setCurrentEditSequence(ArrayList<TestChamberData> currentEditSequence) {
+		PortalDevice.currentEditSequence = currentEditSequence;
 	}
 }
 

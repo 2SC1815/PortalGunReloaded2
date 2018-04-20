@@ -39,9 +39,10 @@ public void placeToWorld(Location loc)
          for (int z = 0; z < this.Chamber.getZSize(); z++) {
            Location tmp = loc.clone().add(x, y, z);
            BlockData b = this.Chamber.getBlock(x, y, z);
-           tmp.getBlock().setType(b.getMaterial());
-           tmp.getBlock().setData(b.GetData());
-
+           if (!tmp.getBlock().getType().equals(b.getMaterial())) {
+	           tmp.getBlock().setType(b.getMaterial());
+	           tmp.getBlock().setData(b.GetData());
+           }
          }
        }
      }

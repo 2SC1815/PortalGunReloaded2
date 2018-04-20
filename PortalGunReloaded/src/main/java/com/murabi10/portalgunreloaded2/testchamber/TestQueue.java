@@ -153,9 +153,10 @@ public class TestQueue implements org.bukkit.event.Listener {
 			index++;
 			if (index >= testChambers.size()) {
 				e.getPlayer().teleport(this.exitLocation);
-				e.getPlayer().sendTitle("テストチェンバークリア！", "That's awesome!");
+				e.getPlayer().sendTitle("クリア", "That's awesome!");
 				stop();
 			} else {
+				e.getPlayer().sendMessage("テストチェンバー" + index+1 + " クリア");
 				BeginTest(false);
 			}
 			PortalDevice d = PortalDevice.getDeviceInstance(e.getPlayer());

@@ -46,7 +46,7 @@ public class PlayProcessCommand implements CommandExecutor {
 									data.add( p.getTestChamber(i));
 
 								TestQueue queue = new TestQueue((Player) ent, data,
-										ent.getLocation().clone(), ent.getLocation().clone());
+										p.getExit() != null ? p.getExit() : ent.getLocation().clone(), ent.getLocation().clone());
 
 								queue.BeginTest();
 							} catch (ClassNotFoundException | IOException e) {
@@ -134,6 +134,15 @@ public class PlayProcessCommand implements CommandExecutor {
 									}
 								}
 								sender.sendMessage("そのようなテストチェンバーは存在しません");
+							} else if (args[2].equalsIgnoreCase("setreturn")) {
+								try {
+									p.setDoller(Integer.parseInt(args[3]));
+									sender.sendMessage("完了");
+								} catch (Exception e) {
+									sender.sendMessage("数値を入力してください");
+								}
+
+
 							} else {
 								sender.sendMessage("引数が認識できません");
 							}
@@ -154,6 +163,17 @@ public class PlayProcessCommand implements CommandExecutor {
 								for (int i=0; i < p.getProcessSize(); i++) {
 										sender.sendMessage(i + " : " + p.getTestChamber(i).getFileName() + " : (" + p.getTestChamber(i).getChamberName() + ")");
 								}
+							} else if (args[2].equalsIgnoreCase("info")) {
+								sender.sendMessage("プロセス名 : " + p.getProcessName());
+								sender.sendMessage("報酬 : " + p.getDoller() + "$");
+								sender.sendMessage("出口 : " + p.getExit() != null ? p.getExit().toString() : "指定なし");
+							} else if (args[2].equalsIgnoreCase("setloc")) {
+								p.setExit(((Player) sender).getLocation());
+								sender.sendMessage("現在位置を出口に設定しました");
+								sender.sendMessage(p.getExit().toString());
+							} else if (args[2].equalsIgnoreCase("resetloc")) {
+								p.setExit(null);
+								sender.sendMessage("現在位置を指定なしにしました");
 							}
 
 						} else {

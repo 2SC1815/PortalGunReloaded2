@@ -26,12 +26,16 @@ public class Door extends TestingElement {
 		for (Block b : new Cuboid(getRelative1(this.OriginLocation), getRelative2(this.OriginLocation))) {
 			b.setType(Material.AIR);
 		}
+		this.getRelative1(this.OriginLocation).getBlock().setType(Material.AIR);
 	}
 
 	private transient int i = 0;
 
 	protected void Run() {
 		if (this.i >= 5) {
+			if (isEditMode()) {
+				this.getRelative1(this.OriginLocation).getBlock().setType(Material.IRON_BLOCK);
+			}
 			setInput(true);
 			if (Switches().size() != 0) {
 				for (TestingElement e : Switches()) {

@@ -45,6 +45,7 @@ public class Indicator extends TestingElement {
 				i.setDurability(isInput() ? PortalGun.ON_INDICATOR_MAP_ID : PortalGun.OFF_INDICATOR_MAP_ID);
 
 				if (i != null) {
+					if (this.frame.getItem().getDurability() != i.getDurability())
 					this.frame.setItem(i);
 				}
 			}
@@ -62,6 +63,7 @@ public class Indicator extends TestingElement {
 			ItemStack item = new ItemStack(Material.MAP);
 			item.setDurability(isInput() ? PortalGun.ON_INDICATOR_MAP_ID : PortalGun.OFF_INDICATOR_MAP_ID);
 
+			if (this.frame.getItem().getDurability() != item.getDurability())
 			this.frame.setItem(item);
 
 			this.i = 0;

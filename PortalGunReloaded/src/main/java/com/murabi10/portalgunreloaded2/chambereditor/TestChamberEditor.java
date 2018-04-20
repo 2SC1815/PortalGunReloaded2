@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -131,8 +132,9 @@ public class TestChamberEditor {
 				point.setEditMode(true);
 				point.setTargetPlayer(this.EditPlayer);
 				point.initRunnable();
-
-				this.EditPlayer.teleport(point.getRelative1(ChamberOriginLoc));
+				ChamberOriginLoc.getWorld().loadChunk(point.getRelative1(ChamberOriginLoc).getChunk());
+				this.EditPlayer.teleport(point.getRelative1(ChamberOriginLoc).add(0.5, 0.5, 0.5));
+				//System.out.println("1" + point.getRelative1(ChamberOriginLoc).toString());
 				return;
 			}
 		}
@@ -143,7 +145,9 @@ public class TestChamberEditor {
 		StartPoint point = new StartPoint(this.ChamberOriginLoc, Methods.getX(this.ChamberOriginLoc, loc),
 				Methods.getY(this.ChamberOriginLoc, loc), Methods.getZ(this.ChamberOriginLoc, loc));
 		AddTestElement(point);
-		this.EditPlayer.teleport(point.getRelative1(ChamberOriginLoc));
+		//ChamberOriginLoc.getWorld().loadChunk(point.getRelative1(ChamberOriginLoc).getChunk());
+		this.EditPlayer.teleport(point.getRelative1(ChamberOriginLoc).add(0.5, 0.5, 0.5));
+		//System.out.println("2 " + point.getRelative1(ChamberOriginLoc).toString());
 	}
 
 	public void Save() {
@@ -173,7 +177,8 @@ public class TestChamberEditor {
 		editors.remove(this);
 		this.target.deleteFromWorld(this.ChamberOriginLoc);
 		EditChamberSelector.remove(this.ChamberOriginLoc);
-		this.EditPlayer.teleport(this.EditPlayer.getBedSpawnLocation());
+		Location loc = this.EditPlayer.getBedSpawnLocation();
+		this.EditPlayer.teleport(loc != null ? loc : Bukkit.getWorld("world").getSpawnLocation());
 		EditChamberSelector.updateData(this.EditPlayer);
 	}
 
